@@ -1,0 +1,68 @@
+<resources>
+<strings>
+	<string id="AppName">Sailing Tools</string>
+	
+	<string id="menu_load_waypoint">Load waypoint</string>
+	<string id="menu_start_timer">Start timer</string>
+	<string id="menu_back">Back</string>
+	<string id="menu_save">Save and Exit</string>
+	<string id="menu_discard">Discard and Exit</string>
+	<string id="menu_unfollow">Stop Following</string>
+	<string id="menu_saveTarget">Save</string>
+	
+	<string id="pickerChooserTitle">Choose Waypoint</string>
+	
+	<string id="title_slot01">Slot 01</string>
+	<string id="title_slot02">Slot 02</string>
+	<string id="title_slot03">Slot 03</string>
+	<string id="title_slot04">Slot 04</string>
+	<string id="title_slot05">Slot 05</string>
+	<string id="title_slot06">Slot 06</string>
+	<string id="title_slot07">Slot 07</string>
+	<string id="title_slot08">Slot 08</string>
+	<string id="title_slot09">Slot 09</string>
+	<string id="title_start_pin">Start Pin</string>
+	<string id="title_cmte_boat">Committee Boat</string>
+</strings>
+<menu id="MainMenu">
+	<menu-item id="load_waypoint">@Strings.menu_load_waypoint</menu-item>
+	<menu-item id="start_timer">@Strings.menu_start_timer</menu-item>
+	<menu-item id="back">@Strings.menu_back</menu-item>
+</menu>
+<menu id="StopMenu">
+	<menu-item id="back">@Strings.menu_back</menu-item>
+	<menu-item id="save">@Strings.menu_save</menu-item>
+	<menu-item id="discard">@Strings.menu_discard</menu-item>
+</menu>
+<menu id="TargetMenu">
+	<menu-item id="back">@Strings.menu_back</menu-item>
+	<menu-item id="unfollow">@Strings.menu_unfollow</menu-item>
+	<menu-item id="save">@Strings.menu_saveTarget</menu-item>
+</menu>
+<properties>
+	<property id="slot01" type="string">MKE North Gap;43.044235;-87.880455</property>
+	<property id="slot02" type="string">MKE Main Gap;43.02631;-87.881882</property>
+	<property id="slot03" type="string">MKE South Gap;43.007965;-87.876808</property>
+	<property id="slot04" type="string">MKE MAST Bouy;43.03661;-87.846336</property>
+	<property id="slot05" type="string">MKE Green Bell Bouy;42.989051;-87.830694</property>
+	<property id="slot06" type="string"></property>
+	<property id="slot07" type="string"></property>
+	<property id="slot08" type="string"></property>
+	<property id="slot09" type="string"></property>
+	<property id="start_pin" type="string">Start Pin</property>
+	<property id="cmte_boat" type="string">Start Pin</property>
+</properties>
+<settings>
+    <setting propertyKey="@Properties.slot01" title="@Strings.title_slot01"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot02" title="@Strings.title_slot02"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot03" title="@Strings.title_slot03"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot04" title="@Strings.title_slot04"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot05" title="@Strings.title_slot05"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot06" title="@Strings.title_slot06"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot07" title="@Strings.title_slot07"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot08" title="@Strings.title_slot08"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.slot09" title="@Strings.title_slot09"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.start_pin" title="@Strings.title_start_pin"><settingConfig type="alphaNumeric"/></setting>
+    <setting propertyKey="@Properties.cmte_boat" title="@Strings.title_cmte_boat"><settingConfig type="alphaNumeric"/></setting>
+</settings>
+</resources>
