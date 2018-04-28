@@ -70,7 +70,7 @@ class SailingToolsMenuDelegate_Main extends SailingToolsMenuWaypointDelegate {
 				break;
 			case :start_timer:
 		        Sys.println("start_timer");
-				//App.getApp().startTimer();
+				App.getApp().startTimer();
 				break;
 			case :back:
 				// Do nothing -> return	

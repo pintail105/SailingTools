@@ -8,6 +8,8 @@ class SailingToolsApp extends App.AppBase {
 	var sailingToolsViews = [];
 	var sailingToolsDelegates = [];
 	var viewIndex = null;
+	var timerIndex = null;
+	var raceTimer = null;
 
     var posnInfo = null; // Position.Info object
     var lastPosnUpdate = null; // the time of the last position update
@@ -65,6 +67,7 @@ class SailingToolsApp extends App.AppBase {
         return [ sailingToolsViews[0], sailingToolsDelegates[0] ];
     }
 
+// This is called every second, to update view, etc.
 	function refresh() {
 		Ui.requestUpdate();
 		// check if we can record, and if we're not then try to
@@ -76,10 +79,16 @@ class SailingToolsApp extends App.AppBase {
 				recording = true;
 				if( ( session == null ) || ( session.isRecording() == false ) ) {
 					Sys.println("start ActivityRecording");
-					session = Record.createSession({:name=>"Sailing Tools", :sport=>Record.SPORT_GENERIC});
+					session = Record.createSession({:name=>"Sailing", :sport=>Record.SPORT_GENERIC});
 					session.start();
 				}
 			}
+		}
+		
+		// Handle beeps for race timer
+		// We do this in app, since we may not be in the race timer view when beep time is hit
+		if (raceTimer != null) {
+			raceTimer.update();
 		}
 	}
 	
@@ -121,11 +130,32 @@ class SailingToolsApp extends App.AppBase {
 	
 	// Start Timer menu item selected
 	function startTimer() {
-		// TODO:
 		// if timer started, show that page and restart it
 		// if timer not started, start one
 		// timer class will need to be in App, and update timer view, since timer view can be 
 		// hidden 
+		
+		// set up the timer object
+		// this is used in the App object to set off beeps
+		if (raceTimer == null) {
+			Sys.println("Attempting to start timer");
+			raceTimer = new RaceTimer();
+		}
+		
+		// set up the timer view
+		if (timerIndex == null) {
+			sailingToolsViews.add( new SailingToolsTimerView() );
+	    		sailingToolsDelegates.add( new SailingToolsDelegate() );
+			
+	    		viewIndex = sailingToolsViews.size() - 1;
+	    		timerIndex = viewIndex;
+    		} else {
+    			viewIndex = timerIndex;
+    		}
+    		raceTimer.resetTimer();
+        sailingToolsViews[viewIndex].setPosition(posnInfo, lastPosnUpdate);
+		Ui.popView(Ui.SLIDE_UP); // Need to pop the menu, then switch views
+		Ui.switchToView(sailingToolsViews[viewIndex], sailingToolsDelegates[viewIndex], Ui.SLIDE_UP);
 	}
 	
 	// Load a saved waypoint as a target, then switch to that target

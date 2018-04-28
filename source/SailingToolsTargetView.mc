@@ -84,6 +84,10 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			}
 		}
 	}
+    
+    function onLayout( dc ) {
+        setLayout( Rez.Layouts.TargetLayout( dc ) );
+    }
 	
 	// Handle Select button press
 	function doSelect() {
@@ -106,30 +110,33 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
         var string;
-        var myDrawText = new DrawText();
 
         // Set background color
+        /*
         dc.setColor( Gfx.COLOR_TRANSPARENT, Gfx.COLOR_BLACK );
         dc.clear();
         dc.setColor( Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT );
-        
+        */
+		var foreColor = Gfx.COLOR_WHITE;
+		//var backColor = Gfx.COLOR_TRANSPARENT;
         
     		// Forerunner 235 width: 215, height: 180
     		//  center: 107, 90
     		// time at top
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 		string = today.hour.format("%2d") + ":" + today.min.format("%02d") + ":" + today.sec.format("%02d");
-		dc.drawText( dc.getWidth()/2, 10, Gfx.FONT_LARGE, string, Gfx.TEXT_JUSTIFY_CENTER );
+		View.findDrawableById("targetTime").setText( string );
         
         
         // show target name at bottom
-        dc.drawText( dc.getWidth()/2, 156, Gfx.FONT_MEDIUM, tgtName, Gfx.TEXT_JUSTIFY_CENTER );
+		View.findDrawableById("targetName").setText( tgtName );
+        
 	        
         // only display position data if it we have it 
         if( posnInfo != null ) {
 			// if last position update was > 10 seconds old or signal is poor, draw data in dark grey 
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10 || posnInfo.accuracy < Position.QUALITY_USABLE) {
-		        dc.setColor( Gfx.COLOR_DK_GRAY, Gfx.COLOR_TRANSPARENT );
+				foreColor = Gfx.COLOR_DK_GRAY;
 			}
 			
 			// get distance and bearing to target
@@ -139,21 +146,16 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
             // get heading (for drawing bearing arrow relative to current heading)
 			var heading_deg = posnInfo.heading * (180 / Math.PI);
             
-			// draw dividers
-			// between ETE and distance
-			dc.drawLine( 107, 45, 107, 160 );
-			// above lat/long
-			dc.drawLine( 0, 160, dc.getWidth(), 160 );
 			
 			// ETE = Estimated Time Enroute
 			// Time to target on left upper
 			// get relative speed to target
 			var speed_rel = Math.cos( (bearing_deg - heading_deg) * (Math.PI / 180) ) * (posnInfo.speed * 1.94384);
+			var targetETE = View.findDrawableById("targetETE");
 			// If our relative speed is less than 0.1kt we show NA
 			// This handles negative and zero speeds, and those that would produce very high ETE
 			if (speed_rel < 0 || speed_rel == 0) {
-				string = "NA";
-				dc.drawText( 102, 28, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_RIGHT );
+				targetETE.setText("NA");
 			} else {
 				var ETE = distance / speed_rel;
 				//Sys.println( "ETE: " + ETE );
@@ -161,81 +163,55 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 				if ( ETE > 1 ) {
 					string = ETE.toNumber().toString() + ":";
 					string += ((ETE - ETE.toNumber()) * 60).format("%02d");
-					dc.drawText( 102, 28, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_RIGHT );
+					targetETE.setText(string);	
 				} else { // otherwise show as minutes:seconds
 					// draw seconds in smaller font
 					var string1 = (ETE * 60).toNumber().toString() + ":";
-					var txtDim1 = dc.getTextDimensions( string1, Gfx.FONT_NUMBER_HOT );
 					string = (((ETE * 60) - (ETE * 60).toNumber()) * 60).format("%02d");
-					var txtDim = dc.getTextDimensions( string, Gfx.FONT_NUMBER_MEDIUM );
 					// Need to start minutes the width of the seconds to the left
-					dc.drawText( 102 - txtDim[0],
-								 28, Gfx.FONT_NUMBER_HOT, string1, Gfx.TEXT_JUSTIFY_RIGHT );
+					targetETE.setText(string1 + "  ");
 					// Need to start seconds down the difference between minutes height and seconds height
-					dc.drawText( 102,
-								28 + txtDim1[1] - txtDim[1], 
-								Gfx.FONT_NUMBER_MEDIUM, string, Gfx.TEXT_JUSTIFY_RIGHT );
+					View.findDrawableById("targetETE").setText( string );
 				}
 			}
-			//dc.drawText( 82, 30, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_RIGHT );
-			dc.drawText( 99, 79, Gfx.FONT_SMALL, "ETE", Gfx.TEXT_JUSTIFY_RIGHT );
 			
 			// Bearing to target on left lower
 			if (bearing_deg < 0) { bearing_deg += 360; } // make sure degrees are positive
 			string = bearing_deg.format("%1.0f");
-			dc.drawText( 102, 88, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_RIGHT );
-			dc.drawText( 99, 139, Gfx.FONT_SMALL, "Brg", Gfx.TEXT_JUSTIFY_RIGHT );
+			View.findDrawableById("targetBrg").setText( string );
 			
 			// speed in kt large on right upper
             string = (posnInfo.speed * 1.94384).format("%1.1f"); // Convert from m/s to knots
-			dc.drawText( 110, 28, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_LEFT );
-			dc.drawText( 113, 79, Gfx.FONT_SMALL, "knt", Gfx.TEXT_JUSTIFY_LEFT );
+			View.findDrawableById("targetKnt").setText( string );
 			
         		// distance in nm large on right lower
             string = distance.format("%1.1f"); 
-			dc.drawText( 110, 88, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_LEFT );
-			dc.drawText( 113, 139, Gfx.FONT_SMALL, "nm", Gfx.TEXT_JUSTIFY_LEFT );
+			View.findDrawableById("targetNM").setText( string );
             
             // draw arrow for bearing
             self.bearingArrow.draw( dc, bearing_deg - heading_deg );
             
             // Warn if position is stale or not usable
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10) {
-				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_DK_GRAY );
+//				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_DK_GRAY );
 				
 				var posnTime = Gregorian.info(lastPosnUpdate, Time.FORMAT_SHORT);
 				string = "Position stale\nLast update:\n";
 				string += posnTime.hour.format("%2d") + ":" + posnTime.min.format("%02d") + ":" + posnTime.sec.format("%02d");
-				//string += "\n" + posnTime.year.format("%4d") + "-" + posnTime.month.format("%02d") + "-" + posnTime.day.format("%02d");
-				dc.drawText( 
-					dc.getWidth()/2, 
-					31, 
-					Gfx.FONT_LARGE,
-					string,
- 					Gfx.TEXT_JUSTIFY_CENTER
-				 );
+				
+				View.findDrawableById("targetBadPos").setText( string );
+				 
+				 
 			} else if (posnInfo.accuracy < Position.QUALITY_USABLE) { 
-				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_DK_GRAY );
-				dc.drawText( 
-					dc.getWidth()/2, 
-					31, 
-					Gfx.FONT_LARGE,
-					"Position accuracy\nis poor",
- 					Gfx.TEXT_JUSTIFY_CENTER
-				 );
+//				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_DK_GRAY );
+				View.findDrawableById("targetBadPos").setText( "Position accuracy\nis poor" );
 			}
 			
             
         }
         else {
-			dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT );
-			dc.drawText( 
-				dc.getWidth()/2, 
-				31, 
-				Gfx.FONT_LARGE,
-				"No position info",
-				Gfx.TEXT_JUSTIFY_CENTER
-			);
+//			dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT );
+			View.findDrawableById("targetBadPos").setText( "No position info" );
         }
     }
 
