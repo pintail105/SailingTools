@@ -16,7 +16,7 @@ class RaceTimer {
 	function resetTimer() {
 		// Get time 5 minutes from now, as Moment object
 //		endTime = Time.now().add(new Time.Duration( 5 * Gregorian.SECONDS_PER_MINUTE ));
-		endTime = Time.now().add(new Time.Duration( 600 )); //TESTING
+		endTime = Time.now().add(new Time.Duration( 300 )); //TESTING
 	}
 	
 	function getEndTime() {
@@ -47,7 +47,8 @@ class RaceTimer {
 		    Attention.backlight(true);
 		}
 		if (Attention has :playTone) {	
-			Attention.playTone(Attention.TONE_TIME_ALERT);
+//			Attention.playTone(Attention.TONE_TIME_ALERT);
+			Attention.playTone(Attention.TONE_ALARM);
 		}
 		if (Attention has :vibrate) {
 			Attention.vibrate([new Attention.VibeProfile(100, 500)]); // On for one second)

@@ -87,6 +87,7 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
     
     function onLayout( dc ) {
         setLayout( Rez.Layouts.TargetLayout( dc ) );
+        onUpdate( dc ); // Need to do the initial update of dynamic content
     }
 	
 	// Handle Select button press
@@ -111,14 +112,7 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
         View.onUpdate(dc);
         var string;
 
-        // Set background color
-        /*
-        dc.setColor( Gfx.COLOR_TRANSPARENT, Gfx.COLOR_BLACK );
-        dc.clear();
-        dc.setColor( Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT );
-        */
 		var foreColor = Gfx.COLOR_WHITE;
-		//var backColor = Gfx.COLOR_TRANSPARENT;
         
     		// Forerunner 235 width: 215, height: 180
     		//  center: 107, 90
@@ -134,6 +128,8 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 	        
         // only display position data if it we have it 
         if( posnInfo != null ) {
+			View.findDrawableById("targetBadPos").setText( "" );
+			
 			// if last position update was > 10 seconds old or signal is poor, draw data in dark grey 
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10 || posnInfo.accuracy < Position.QUALITY_USABLE) {
 				foreColor = Gfx.COLOR_DK_GRAY;
@@ -189,7 +185,9 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			View.findDrawableById("targetNM").setText( string );
             
             // draw arrow for bearing
-            self.bearingArrow.draw( dc, bearing_deg - heading_deg );
+            if ( self.bearingArrow != null ) { // If we're just being called from onLayout, we can't draw the bearing arrow
+				self.bearingArrow.draw( dc, bearing_deg - heading_deg );
+            }
             
             // Warn if position is stale or not usable
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10) {
@@ -200,19 +198,40 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 				string += posnTime.hour.format("%2d") + ":" + posnTime.min.format("%02d") + ":" + posnTime.sec.format("%02d");
 				
 				View.findDrawableById("targetBadPos").setText( string );
-				 
+				
+				setTextColor( Gfx.COLOR_DK_GRAY);				 
 				 
 			} else if (posnInfo.accuracy < Position.QUALITY_USABLE) { 
 //				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_DK_GRAY );
-				View.findDrawableById("targetBadPos").setText( "Position accuracy\nis poor" );
+				View.findDrawableById("targetBadPos").setText( "Position accuracy\nis poor" );	
+				
+				setTextColor( Gfx.COLOR_LT_GRAY);
+			} else {				
+				setTextColor( Gfx.COLOR_WHITE );
 			}
 			
             
         }
         else {
-//			dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT );
 			View.findDrawableById("targetBadPos").setText( "No position info" );
+			setTextColor( Gfx.COLOR_DK_GRAY );
         }
+    }
+    
+    function setTextColor( color ) {
+				
+		View.findDrawableById("lblTargetETE").setColor( color );
+		View.findDrawableById("lblTargetBRG").setColor( color );
+		View.findDrawableById("lblTargetKNT").setColor( color );
+		View.findDrawableById("lblTargetNM").setColor( color );
+		
+		View.findDrawableById("targetTime").setColor( color );
+		View.findDrawableById("targetName").setColor( color );
+		View.findDrawableById("targetETE").setColor( color );
+		View.findDrawableById("targetETEsec").setColor( color );
+		View.findDrawableById("targetBrg").setColor( color );
+		View.findDrawableById("targetKnt").setColor( color );
+		View.findDrawableById("targetNM").setColor( color );
     }
 
 }

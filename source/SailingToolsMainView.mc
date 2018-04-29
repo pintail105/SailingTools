@@ -27,7 +27,7 @@ class SailingToolsViewTemplate extends Ui.View {
 	
     // Load resources here
     function onLayout(dc) {
-        setLayout(Rez.Layouts.MainLayout(dc));
+        setLayout(Rez.Layouts.DafaultLayout(dc));
 	}
 
     // Called when this View is removed from the screen. Save the
@@ -55,7 +55,12 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
     function initialize() {
         SailingToolsViewTemplate.initialize();
     }
-
+	
+    // Load resources here
+    function onLayout(dc) {
+        setLayout(Rez.Layouts.MainLayout(dc));
+        onUpdate( dc ); // Need to do the initial update of dynamic content
+	}
 
     // Called when this View is brought to the foreground. Restore
     // the state of this View and prepare it to be shown. This includes
@@ -70,109 +75,107 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
         var string;
-
-        // Set background color
-        dc.setColor( Gfx.COLOR_TRANSPARENT, Gfx.COLOR_BLACK );
-        dc.clear();
-        dc.setColor( Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT );
         
+		var foreColor = Gfx.COLOR_WHITE;
         
     		// Forerunner 235 width: 215, height: 180
     		//  center: 107, 90
     		// time at top
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 		string = today.hour.format("%2d") + ":" + today.min.format("%02d") + ":" + today.sec.format("%02d");
-		dc.drawText( dc.getWidth()/2, 10, Gfx.FONT_LARGE, string, Gfx.TEXT_JUSTIFY_CENTER );
+		View.findDrawableById("mainTime").setText( string );
         
         // only display position data if it we have it 
         if( posnInfo != null ) {
+			View.findDrawableById("mainBadPos").setText( "" );
+			
 			// if last position update was > 10 seconds old or signal is poor, draw data in dark grey 
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10 || posnInfo.accuracy < Position.QUALITY_USABLE) {
-		        dc.setColor( Gfx.COLOR_DK_GRAY, Gfx.COLOR_TRANSPARENT );
+				foreColor = Gfx.COLOR_DK_GRAY;
 			}
-			// draw dividers
-			// between COG and knt
-			dc.drawLine( 77, 45, 77, 142 );
-			// above lat/long
-			dc.drawLine( 0, 144, dc.getWidth(), 144 );
         
 			// Heading (Course Over Ground) on left
 			var heading_deg = posnInfo.heading * (180 / Math.PI);
 			if (heading_deg < 0) { heading_deg += 360; } // make sure degrees are positive
 			string = heading_deg.format("%1.0f");
-			dc.drawText( 72, 70, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_RIGHT );
-			dc.drawText( 69, 123, Gfx.FONT_SMALL, "COG", Gfx.TEXT_JUSTIFY_RIGHT );
+			View.findDrawableById("mainCOG").setText(string);
         
         		// speed in knots big on right
             string = (posnInfo.speed * 1.94384).format("%1.1f"); // Convert from m/s to knots
-			dc.drawText( 80, 31, Gfx.FONT_NUMBER_THAI_HOT, string, Gfx.TEXT_JUSTIFY_LEFT );
-			dc.drawText( 83, 123, Gfx.FONT_SMALL, "knt", Gfx.TEXT_JUSTIFY_LEFT );
+			View.findDrawableById("mainKnt").setText(string);
             
             // show lat/long at bottom
             // lat
             string = posnInfo.position.toDegrees()[0].format("%1.6f");
-	        dc.drawText( 137, 142, Gfx.FONT_MEDIUM, string, Gfx.TEXT_JUSTIFY_RIGHT );
+			View.findDrawableById("mainLat").setText(string);
             if (posnInfo.position.toDegrees()[0] > 0) {
                 string = "N";
             } else {
                 string = "S";
             }
-	        dc.drawText( 142, 142, Gfx.FONT_MEDIUM, string, Gfx.TEXT_JUSTIFY_LEFT );
+			View.findDrawableById("mainLatNS").setText(string);
          	// long
             string = posnInfo.position.toDegrees()[1].format("%1.6f");
-	        dc.drawText( 137, 160, Gfx.FONT_MEDIUM, string, Gfx.TEXT_JUSTIFY_RIGHT );
+			View.findDrawableById("mainLon").setText(string);
             if (posnInfo.position.toDegrees()[1] > 0) {
                 string = "E";
             } else {
                 string = "W";
             }
-	        dc.drawText( 142, 160, Gfx.FONT_MEDIUM, string, Gfx.TEXT_JUSTIFY_LEFT );
+			View.findDrawableById("mainLonEW").setText(string);
             
             // draw arrow for COG
-            self.bearingArrow.draw( dc, heading_deg );
+            if ( self.bearingArrow != null ) {// If we're just being called from onLayout, we can't draw the bearing arrow
+	            self.bearingArrow.draw( dc, heading_deg );
+            }
+            
             
             // Warn if position is stale or not usable
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10) {
-				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT );
+//				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_DK_GRAY );
 				
 				var posnTime = Gregorian.info(lastPosnUpdate, Time.FORMAT_SHORT);
 				string = "Position stale\nLast update:\n";
 				string += posnTime.hour.format("%2d") + ":" + posnTime.min.format("%02d") + ":" + posnTime.sec.format("%02d");
-				//string += "\n" + posnTime.year.format("%4d") + "-" + posnTime.month.format("%02d") + "-" + posnTime.day.format("%02d");
-				dc.drawText( 
-					dc.getWidth()/2, 
-					31, 
-					Gfx.FONT_LARGE,
-					string,
- 					Gfx.TEXT_JUSTIFY_CENTER
-				 );
+				
+				View.findDrawableById("mainBadPos").setText( string );
+				 
+				setTextColor( Gfx.COLOR_DK_GRAY );
+				 
 			} else if (posnInfo.accuracy < Position.QUALITY_USABLE) { 
-				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT );
-				dc.drawText( 
-					dc.getWidth()/2, 
-					31, 
-					Gfx.FONT_LARGE,
-					"Position accuracy\nis poor",
- 					Gfx.TEXT_JUSTIFY_CENTER
-				 );
+//				dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_DK_GRAY );
+				View.findDrawableById("mainBadPos").setText( "Position accuracy\nis poor" );
+				 
+				setTextColor( Gfx.COLOR_LT_GRAY );
+			} else {
+				setTextColor( Gfx.COLOR_WHITE );
 			}
+			
 			
             
         }
         else {
-			dc.setColor( Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT );
-			dc.drawText( 
-				dc.getWidth()/2, 
-				31, 
-				Gfx.FONT_LARGE,
-				"No position info",
-				Gfx.TEXT_JUSTIFY_CENTER
-			);
+			View.findDrawableById("mainBadPos").setText( "No position info" );
+				 
+			setTextColor( Gfx.COLOR_DK_GRAY );
         }
     }
     
 	// Handle Select button press
 	function doSelect() {
 	}
+	
+    function setTextColor( color ) {
+				 
+		View.findDrawableById("lblMainETE").setColor( color );
+		View.findDrawableById("lblMainKnt").setColor( color );
 
+		View.findDrawableById("mainTime").setColor( color );
+		View.findDrawableById("mainCOG").setColor( color );
+		View.findDrawableById("mainKnt").setColor( color );
+		View.findDrawableById("mainLat").setColor( color );
+		View.findDrawableById("mainLatNS").setColor( color );
+		View.findDrawableById("mainLon").setColor( color );
+		View.findDrawableById("mainLonEW").setColor( color );
+	}
 }

@@ -2,11 +2,18 @@
     <bitmap id="LauncherIcon" filename="sailboat_icon.png" />
     
 
-<drawable-list id="TargetLayoutDrawables">
-  <!-- line between ETE and distance -->
-  <shape type="rectangle" x="107" y="45" width="1" height="115" color="Gfx.COLOR_WHITE"/>
-  <!-- line above lat/long -->
-  <shape type="rectangle" x="0" y="160" width="215" height="1" color="Gfx.COLOR_WHITE"/>
-  
-</drawable-list>
+	<drawable-list id="TargetLayoutDrawables">
+		<!-- line between ETE and distance -->
+		<shape type="rectangle" x="107" y="45" width="1" height="115" color="Gfx.COLOR_WHITE"/>
+		<!-- line above lat/long -->
+		<shape type="rectangle" x="0" y="160" width="215" height="1" color="Gfx.COLOR_WHITE"/>
+	</drawable-list>
+	
+	<drawable-list id="MainLayoutDrawables">
+		<!-- line between COG and knt -->
+		<shape type="rectangle" x="77" y="45" width="1" height="98" color="Gfx.COLOR_WHITE"/>
+		<!-- line above lat/long -->
+		<shape type="rectangle" x="0" y="144" width="215" height="1" color="Gfx.COLOR_WHITE"/>
+	</drawable-list>
+
 </drawables>
