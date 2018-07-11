@@ -20,10 +20,10 @@ If the location stops being updated or becomes poor quality, the display will gr
 Currently the layouts are designed for the Garmin Forerunner 235.  Layouts for other Garmin watches are planned for the future (please feel free to send me a request).
 
 Main View:
-![Alt text](img/mainView.jpg?raw=true "Main View")
+![Main View](https://github.com/pintail105/SailingTools/raw/master/img/mainView.png?raw=true "Main View")
 
 Target (waypoint) View:
-![Alt text](img/targetView.jpg?raw=true "Target (waypoint) View")
+![Target View](https://github.com/pintail105/SailingTools/raw/master/img/targetView.png?raw=true "Target (waypoint) View")
 
 Timer View:
-![Alt text](img/timerView.jpg?raw=true "Timer View")
+![Timer View](https://github.com/pintail105/SailingTools/raw/master/img/timerView.png?raw=true "Timer View")
