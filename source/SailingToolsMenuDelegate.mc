@@ -11,18 +11,18 @@ class SailingToolsMenuWaypointDelegate extends Ui.MenuInputDelegate {
     // create menu for waypoints
 	function createWaypointMenu() {
 		var menu = new Ui.Menu();
-		menu.setTitle("Follow Waypoint");
+		menu.setTitle("Waypoints");
 		menu.addItem("Back", :back);
 		
 		var slotName = "";
 		var slotId = "";
 		
-		// load all slots 1-9
-		for ( var i = 1; i <= 9; i++ ) {
+		// load all slots 1-19
+		for ( var i = 1; i <= 19; i++ ) {
 			slotId = "slot" + i.format("%02d");
 			slotName = getSlotName(slotId);
 			if ( slotName != "") {
-				menu.addItem(slotName, i);
+				menu.addItem(i.format("%2d") + ": " + slotName, i);
 			}
 		}
 		// load special start_pin and cmte_boat slots
@@ -116,7 +116,7 @@ class SailingToolsMenuDelegate_FollowTarget extends Ui.MenuInputDelegate {
 			// Do nothing -> return	
 			//Ui.popView(Ui.SLIDE_RIGHT);
 			App.getApp().returnFromMenu();
-        } else if (item >= 1 && item <= 9) {
+        } else if (item >= 1 && item <= 19) {
 			slotId = "slot" + item.format("%02d");
         } else if (item == :start_pin) {
 			slotId = "start_pin";
@@ -173,7 +173,7 @@ class SailingToolsMenuDelegate_SaveTarget extends Ui.MenuInputDelegate {
 			// Do nothing -> return	
 			//Ui.popView(Ui.SLIDE_RIGHT);
 			App.getApp().returnFromMenu();
-        } else if (item > 1 && item <= 9) {
+        } else if (item > 1 && item <= 19) {
 			slotId = "slot" + item.format("%02d");
         } else if (item == :start_pin) {
 			slotId = "start_pin";

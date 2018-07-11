@@ -146,6 +146,7 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			// ETE = Estimated Time Enroute
 			// Time to target on left upper
 			// get relative speed to target
+			/*
 			var speed_rel = Math.cos( (bearing_deg - heading_deg) * (Math.PI / 180) ) * (posnInfo.speed * 1.94384);
 			var targetETE = View.findDrawableById("targetETE");
 			// If our relative speed is less than 0.1kt we show NA
@@ -170,6 +171,14 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 					View.findDrawableById("targetETE").setText( string );
 				}
 			}
+			*/
+			// Relative bearing (= bearing - heading)
+			var relBearing_deg = bearing_deg - heading_deg;
+			// Keep in range of -180 to +180
+			if (relBearing_deg < -180) { relBearing_deg += 360; }
+			if (relBearing_deg > 180) { relBearing_deg -= 360; }
+			string = relBearing_deg.format("%+1.0f");
+			View.findDrawableById("targetRelBRG").setText( string );
 			
 			// Bearing to target on left lower
 			if (bearing_deg < 0) { bearing_deg += 360; } // make sure degrees are positive
@@ -184,7 +193,7 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
             string = distance.format("%1.1f"); 
 			View.findDrawableById("targetNM").setText( string );
             
-            // draw arrow for bearing
+            // draw arrow for relative bearing
             if ( self.bearingArrow != null ) { // If we're just being called from onLayout, we can't draw the bearing arrow
 				self.bearingArrow.draw( dc, bearing_deg - heading_deg );
             }
@@ -220,15 +229,14 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
     
     function setTextColor( color ) {
 				
-		View.findDrawableById("lblTargetETE").setColor( color );
+		View.findDrawableById("lblTargetRelBRG").setColor( color );
 		View.findDrawableById("lblTargetBRG").setColor( color );
 		View.findDrawableById("lblTargetKNT").setColor( color );
 		View.findDrawableById("lblTargetNM").setColor( color );
 		
 		View.findDrawableById("targetTime").setColor( color );
 		View.findDrawableById("targetName").setColor( color );
-		View.findDrawableById("targetETE").setColor( color );
-		View.findDrawableById("targetETEsec").setColor( color );
+		View.findDrawableById("targetRelBRG").setColor( color );
 		View.findDrawableById("targetBrg").setColor( color );
 		View.findDrawableById("targetKnt").setColor( color );
 		View.findDrawableById("targetNM").setColor( color );

@@ -73,7 +73,7 @@ class SailingToolsApp extends App.AppBase {
 		// check if we can record, and if we're not then try to
 		if (canRecord && !recording) {
 			// Only start recording if signal is good
-			if (Position.getInfo().accuracy >= Position.QUALITY_USABLE){
+			if (Position.getInfo().accuracy >= Position.QUALITY_POOR){
 				// create target with initial position and name = "Start"
 				addCurPosAsTarget("Start");
 				recording = true;
