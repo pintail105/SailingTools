@@ -15,5 +15,15 @@ All menus are designed with Back being the default option. This helps avoid choo
 Targets are saved to slots. Garmin limits the menu items, so only 15 slots are available at this time.
 Activity recording starts automatically when the unit gets a (marginal) location fix.
 If the timer is already running, starting it will reset it. The time is currently hard coded to 5 minutes.
+If the location stops being updated or becomes poor quality, the display will grey slightly and will include a warning text in red.
 
 Currently the layouts are designed for the Garmin Forerunner 235.  Layouts for other Garmin watches are planned for the future (please feel free to send me a request).
+
+Main View:
+![Alt text](img/mainView.jpg?raw=true "Main View")
+
+Target (waypoint) View:
+![Alt text](img/targetView.jpg?raw=true "Target (waypoint) View")
+
+Timer View:
+![Alt text](img/timerView.jpg?raw=true "Timer View")
