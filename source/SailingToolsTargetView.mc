@@ -177,7 +177,8 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			// Keep in range of -180 to +180
 			if (relBearing_deg < -180) { relBearing_deg += 360; }
 			if (relBearing_deg > 180) { relBearing_deg -= 360; }
-			string = relBearing_deg.format("%+1.0f");
+			//string = relBearing_deg.format("%+1.0f");
+			string = relBearing_deg.format("%1.0f"); // some watch number fonts don't include '+'
 			View.findDrawableById("targetRelBRG").setText( string );
 			
 			// Bearing to target on left lower
@@ -190,7 +191,7 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			View.findDrawableById("targetKnt").setText( string );
 			
         		// distance in nm large on right lower
-            string = distance.format("%1.1f"); 
+            string = distance.format("%1.2f"); 
 			View.findDrawableById("targetNM").setText( string );
             
             // draw arrow for relative bearing

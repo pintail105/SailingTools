@@ -29,16 +29,25 @@ class SailingToolsTimerView extends SailingToolsViewTemplate {
 	// Handle Select button press
 	function doSelect() {
 		// push context menu
-        Ui.pushView(new Rez.Menus.TargetMenu(), new SailingToolsMenuDelagate_TargetContext(), Ui.SLIDE_LEFT);
+		
+        //Ui.pushView(new Rez.Menus.TargetMenu(), new SailingToolsMenuDelagate_TargetContext(), Ui.SLIDE_LEFT);
+        
+        
+		var raceTimer = App.getApp().raceTimer;
+		
+    		if (raceTimer != null ) {
+    			raceTimer.roundMinutes();
+		}
+        
         return true;
 	}
 	
-	function resetTimer() {
+/*	function resetTimer() {
 		// Get time 5 minutes from now, as Moment object
 		endTime = Time.now().add(new Time.Duration( 5 * Gregorian.SECONDS_PER_MINUTE ));
 //		endTime = Time.now().add(new Time.Duration( 15 )); //TESTING
 	}
-
+*/
 
     // Called when this View is brought to the foreground. Restore
     // the state of this View and prepare it to be shown. This includes

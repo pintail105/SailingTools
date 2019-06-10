@@ -27,7 +27,7 @@ class SailingToolsViewTemplate extends Ui.View {
 	
     // Load resources here
     function onLayout(dc) {
-        setLayout(Rez.Layouts.DafaultLayout(dc));
+        setLayout(Rez.Layouts.DefaultLayout(dc));
 	}
 
     // Called when this View is removed from the screen. Save the

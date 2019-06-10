@@ -2,8 +2,9 @@
 //! Copyright 2017-2018 by Dan Perik
 //!
 
-//using Toybox.System as Sys;
+using Toybox.System as Sys;
 //using Toybox.Lang as Lang;
+using Toybox.Math as Math;
 using Toybox.Time as Time;
 using Toybox.Time.Gregorian as Gregorian;
 //using Toybox.Timer as Timer;
@@ -25,6 +26,16 @@ class RaceTimer {
 	
 	function getSecsToStart() {
 		return endTime.compare(Time.now());
+	}
+	
+	function roundMinutes() {
+	// round to nearest minutes
+        //var minutesRemaining = (endTime.compare( Time.now() ) + (Gregorian.SECONDS_PER_MINUTE/2)) % Gregorian.SECONDS_PER_MINUTE;
+        var minutesRemaining = Math.round((endTime.compare( Time.now() ) + (Gregorian.SECONDS_PER_MINUTE/2))  / Gregorian.SECONDS_PER_MINUTE);
+        
+		Sys.println("minutesRemaining: " + minutesRemaining);
+        endTime = Time.now().add(new Time.Duration( minutesRemaining * Gregorian.SECONDS_PER_MINUTE ));
+        
 	}
 	
 	function update() {
