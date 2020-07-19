@@ -128,8 +128,11 @@ class SailingToolsApp extends App.AppBase {
 		sailingToolsViews[viewIndex].doSelect();
 	}
 	
+	function startTimer5() {
+		startTimer(5);
+	}
 	// Start Timer menu item selected
-	function startTimer() {
+	function startTimer(minutes) {
 		// if timer started, show that page and restart it
 		// if timer not started, start one
 		// timer class will need to be in App, and update timer view, since timer view can be 
@@ -141,6 +144,7 @@ class SailingToolsApp extends App.AppBase {
 			Sys.println("Attempting to start timer");
 			raceTimer = new RaceTimer();
 		}
+		raceTimer.setMinutes(minutes);
 		
 		// set up the timer view
 		if (timerIndex == null) {

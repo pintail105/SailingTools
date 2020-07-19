@@ -3,7 +3,8 @@
 	<string id="AppName">Sailing Tools</string>
 	
 	<string id="menu_load_waypoint">Load waypoint</string>
-	<string id="menu_start_timer">Start timer</string>
+	<string id="menu_start_timer_5">Start 5 min timer</string>
+	<string id="menu_start_timer_custom">Start custom timer</string>
 	<string id="menu_back">Back</string>
 	<string id="menu_save">Save and Exit</string>
 	<string id="menu_discard">Discard and Exit</string>
@@ -12,6 +13,7 @@
 	
 	<string id="pickerChooserTitle">Choose Waypoint</string>
 	
+	<string id="title_customTimer">Custom Timer Minutes</string>
 	<string id="title_slot01">Slot 01</string>
 	<string id="title_slot02">Slot 02</string>
 	<string id="title_slot03">Slot 03</string>
@@ -36,7 +38,8 @@
 </strings>
 <menu id="MainMenu">
 	<menu-item id="load_waypoint">@Strings.menu_load_waypoint</menu-item>
-	<menu-item id="start_timer">@Strings.menu_start_timer</menu-item>
+	<menu-item id="start_timer_5">@Strings.menu_start_timer_5</menu-item>
+	<menu-item id="start_timer_custom">@Strings.menu_start_timer_custom</menu-item>
 	<menu-item id="back">@Strings.menu_back</menu-item>
 </menu>
 <menu id="StopMenu">
@@ -50,6 +53,7 @@
 	<menu-item id="save">@Strings.menu_saveTarget</menu-item>
 </menu>
 <properties>
+	<property id="customTimer" type="number">3</property>
 	<property id="slot01" type="string">MKE North Gap;43.044235;-87.880455</property>
 	<property id="slot02" type="string">MKE Main Gap;43.02631;-87.881882</property>
 	<property id="slot03" type="string">MKE South Gap;43.007965;-87.876808</property>
@@ -73,6 +77,7 @@
 	<property id="cmte_boat" type="string">Committee Boat</property>
 </properties>
 <settings>
+    <setting propertyKey="@Properties.customTimer" title="@Strings.title_customTimer"><settingConfig type="numeric"/></setting>
     <setting propertyKey="@Properties.slot01" title="@Strings.title_slot01"><settingConfig type="alphaNumeric"/></setting>
     <setting propertyKey="@Properties.slot02" title="@Strings.title_slot02"><settingConfig type="alphaNumeric"/></setting>
     <setting propertyKey="@Properties.slot03" title="@Strings.title_slot03"><settingConfig type="alphaNumeric"/></setting>

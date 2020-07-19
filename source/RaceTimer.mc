@@ -1,5 +1,5 @@
 //!
-//! Copyright 2017-2018 by Dan Perik
+//! Copyright 2017-2020 by Dan Perik
 //!
 
 using Toybox.System as Sys;
@@ -12,12 +12,17 @@ using Toybox.Attention;
 
 class RaceTimer {
 	
+	var timerMinutes = 5;
 	var endTime = null;
+	
+	function setMinutes(minutes) {
+		timerMinutes = minutes;
+	}
 	
 	function resetTimer() {
 		// Get time 5 minutes from now, as Moment object
-//		endTime = Time.now().add(new Time.Duration( 5 * Gregorian.SECONDS_PER_MINUTE ));
-		endTime = Time.now().add(new Time.Duration( 300 )); //TESTING
+		endTime = Time.now().add(new Time.Duration( timerMinutes * Gregorian.SECONDS_PER_MINUTE ));
+//		endTime = Time.now().add(new Time.Duration( 300 )); //TESTING
 	}
 	
 	function getEndTime() {

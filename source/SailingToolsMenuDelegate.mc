@@ -68,9 +68,13 @@ class SailingToolsMenuDelegate_Main extends SailingToolsMenuWaypointDelegate {
 		        Sys.println("load_waypoint");
 				Ui.pushView(createWaypointMenu(), new SailingToolsMenuDelegate_FollowTarget(), Ui.SLIDE_LEFT);	
 				break;
-			case :start_timer:
-		        Sys.println("start_timer");
-				App.getApp().startTimer();
+			case :start_timer_5:
+		        Sys.println("start_timer_5");
+				App.getApp().startTimer5();
+				break;
+			case :start_timer_custom:
+		        Sys.println("start_timer_custom");
+				App.getApp().startTimer(App.getApp().getProperty("customTimer"));
 				break;
 			case :back:
 				// Do nothing -> return	
