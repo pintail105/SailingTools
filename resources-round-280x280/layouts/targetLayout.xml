@@ -1,0 +1,19 @@
+<layout id="TargetLayout">
+  <drawable id="TargetLayoutDrawables"/>
+  
+  <label id="lblTargetRelBRG" text="RelBrg" x="131" y="92" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblTargetBRG" text="Brg" x="131" y="168" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblTargetKNT" text="Knt" x="147" y="92" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="lblTargetNM" text="nm" x="147" y="168" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+
+  <label id="targetTime" text="" x="center" y="12" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
+  <label id="targetName" text="" x="center" y="200" justification="Gfx.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_MEDIUM" color="Gfx.COLOR_WHITE" />
+  <label id="targetRelBRG" text="" x="134" y="38" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
+  <label id="targetBrg" text="" x="134" y="114" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
+  <label id="targetKnt" text="" x="144" y="38" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
+  <label id="targetNM" text="" x="144" y="114" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
+
+  <label id="targetBadPos" text="" x="center" y="60" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER"  color="Gfx.COLOR_RED" />
+
+
+</layout>
