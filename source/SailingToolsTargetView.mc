@@ -18,6 +18,9 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
     var tgt = null; // Position.location object of current target
     var tgtName = ""; // name of target
     var slotId = ""; // name of slot target saved to
+    // TODO: smooth ETE by averaging last 5 observations
+    //var ETEarr = [null,null,null,null,null];
+    //var ETEidx = 1;
 
     function initialize() {
         SailingToolsViewTemplate.initialize();
@@ -108,8 +111,6 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 
     // Update the view
     function onUpdate(dc) {
-        // Call the parent onUpdate function to redraw the layout
-        View.onUpdate(dc);
         var string;
 
 		var foreColor = Gfx.COLOR_WHITE;
@@ -194,10 +195,6 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
             string = distance.format("%1.2f"); 
 			View.findDrawableById("targetNM").setText( string );
             
-            // draw arrow for relative bearing
-            if ( self.bearingArrow != null ) { // If we're just being called from onLayout, we can't draw the bearing arrow
-				self.bearingArrow.draw( dc, bearing_deg - heading_deg );
-            }
             
             // Warn if position is stale or not usable
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10) {
@@ -221,10 +218,23 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			}
 			
             
+	        // Call the parent onUpdate function to redraw the layout
+	        // We do this _after_ we've updated the layout elements
+	        View.onUpdate(dc);
+	        
+            // _Then_ we draw the arrow for relative bearing
+            if ( self.bearingArrow != null ) { // If we're just being called from onLayout, we can't draw the bearing arrow
+				self.bearingArrow.draw( dc, bearing_deg - heading_deg );
+            }
+	        
         }
         else {
 			View.findDrawableById("targetBadPos").setText( "No position info" );
 			setTextColor( Gfx.COLOR_DK_GRAY );
+			
+	        // Call the parent onUpdate function to redraw the layout
+	        // We do this _after_ we've updated the layout elements
+	        View.onUpdate(dc);
         }
     }
     

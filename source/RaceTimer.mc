@@ -14,6 +14,20 @@ class RaceTimer {
 	
 	var timerMinutes = 5;
 	var endTime = null;
+	var started = false;
+	
+	function isStarted() {
+		return started;
+	}
+	
+	function stopTimer() {
+		started = false;
+	}
+	
+	function startTimer() {
+		started = true;
+		resetTimer();
+	}
 	
 	function setMinutes(minutes) {
 		timerMinutes = minutes;
@@ -30,7 +44,11 @@ class RaceTimer {
 	}
 	
 	function getSecsToStart() {
-		return endTime.compare(Time.now());
+		var secsToStart = timerMinutes * 60;
+		if (started) {
+			secsToStart = endTime.compare(Time.now());
+		}
+		return secsToStart;
 	}
 	
 	function roundMinutes() {
@@ -44,16 +62,18 @@ class RaceTimer {
 	}
 	
 	function update() {
-		var secToStart = getSecsToStart();
-		if ( secToStart >= 0 ) {
-			if ( (secToStart % 60) == 0 ) {
-				notify();
-			}
-			if ( secToStart == 30 || secToStart == 15 || secToStart == 10 ) {
-				notify();
-			}
-			if ( secToStart <= 5 ) {
-				notify();
+		if ( started ) {
+			var secToStart = getSecsToStart();
+			if ( secToStart >= 0 ) {
+				if ( (secToStart % 60) == 0 ) {
+					notify();
+				}
+				if ( secToStart == 30 || secToStart == 15 || secToStart == 10 ) {
+					notify();
+				}
+				if ( secToStart <= 5 ) {
+					notify();
+				}
 			}
 		}
 	}

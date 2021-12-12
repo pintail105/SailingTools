@@ -72,8 +72,6 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
 
     // Update the view
     function onUpdate(dc) {
-        // Call the parent onUpdate function to redraw the layout
-        View.onUpdate(dc);
         var string;
         
 		var foreColor = Gfx.COLOR_WHITE;
@@ -124,10 +122,6 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
             }
 			View.findDrawableById("mainLonEW").setText(string);
             
-            // draw arrow for COG
-            if ( self.bearingArrow != null ) {// If we're just being called from onLayout, we can't draw the bearing arrow
-	            self.bearingArrow.draw( dc, heading_deg );
-            }
             
             
             // Warn if position is stale or not usable
@@ -152,12 +146,24 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
 			}
 			
 			
+	        // Call the parent onUpdate function to redraw the layout
+	        // We do this _after_ we've updated the layout elements
+	        View.onUpdate(dc);
+	        
+            // _Then_ we draw the arrow for COG
+            if ( self.bearingArrow != null ) {// If we're just being called from onLayout, we can't draw the bearing arrow
+	            self.bearingArrow.draw( dc, heading_deg );
+            }
             
         }
         else {
 			View.findDrawableById("mainBadPos").setText( "No position info" );
 				 
 			setTextColor( Gfx.COLOR_DK_GRAY );
+			
+	        // Call the parent onUpdate function to redraw the layout
+	        // We do this _after_ we've updated the layout elements
+	        View.onUpdate(dc);
         }
     }
     

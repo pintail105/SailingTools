@@ -3,8 +3,8 @@
 	<string id="AppName">Sailing Tools</string>
 	
 	<string id="menu_load_waypoint">Load waypoint</string>
-	<string id="menu_start_timer_5">Start 5 min timer</string>
-	<string id="menu_start_timer_custom">Start custom timer</string>
+	<string id="menu_start_timer_5">Load 5 min timer</string>
+	<string id="menu_start_timer_custom">Load custom timer</string>
 	<string id="menu_back">Back</string>
 	<string id="menu_save">Save and Exit</string>
 	<string id="menu_discard">Discard and Exit</string>

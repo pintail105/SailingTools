@@ -35,8 +35,14 @@ class SailingToolsTimerView extends SailingToolsViewTemplate {
         
 		var raceTimer = App.getApp().raceTimer;
 		
-    		if (raceTimer != null ) {
-    			raceTimer.roundMinutes();
+		//  Start the timer if it's not started
+		// Otherwise round to nearest minute
+    	if (raceTimer != null ) {
+    		if (raceTimer.isStarted()) {
+	    		raceTimer.roundMinutes();
+	    	} else {
+	    		raceTimer.startTimer();
+	    	}
 		}
         
         return true;
@@ -70,7 +76,7 @@ class SailingToolsTimerView extends SailingToolsViewTemplate {
 		
 		var raceTimer = App.getApp().raceTimer;
 		
-    		if (raceTimer != null ) {
+		if (raceTimer != null ) {
 			secToStart = raceTimer.getSecsToStart();//endTime.compare(Time.now());
 			absSec = secToStart.abs();
 			if ( (absSec > Gregorian.SECONDS_PER_HOUR) ) {

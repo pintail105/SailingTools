@@ -149,14 +149,15 @@ class SailingToolsApp extends App.AppBase {
 		// set up the timer view
 		if (timerIndex == null) {
 			sailingToolsViews.add( new SailingToolsTimerView() );
-	    		sailingToolsDelegates.add( new SailingToolsDelegate() );
+	    	sailingToolsDelegates.add( new SailingToolsDelegate() );
 			
-	    		viewIndex = sailingToolsViews.size() - 1;
-	    		timerIndex = viewIndex;
-    		} else {
-    			viewIndex = timerIndex;
-    		}
-    		raceTimer.resetTimer();
+    		viewIndex = sailingToolsViews.size() - 1;
+    		timerIndex = viewIndex;
+		} else {
+			viewIndex = timerIndex;
+		}
+		raceTimer.stopTimer(); // stop timer if it's already started
+		raceTimer.resetTimer();
         sailingToolsViews[viewIndex].setPosition(posnInfo, lastPosnUpdate);
 		Ui.popView(Ui.SLIDE_UP); // Need to pop the menu, then switch views
 		Ui.switchToView(sailingToolsViews[viewIndex], sailingToolsDelegates[viewIndex], Ui.SLIDE_UP);
