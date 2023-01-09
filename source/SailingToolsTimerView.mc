@@ -4,7 +4,7 @@
 
 using Toybox.WatchUi as Ui;
 using Toybox.Graphics as Gfx;
-//using Toybox.System as Sys;
+using Toybox.System as Sys;
 using Toybox.Lang as Lang;
 using Toybox.Position as Position;
 using Toybox.Time as Time;
@@ -33,13 +33,21 @@ class SailingToolsTimerView extends SailingToolsViewTemplate {
         //Ui.pushView(new Rez.Menus.TargetMenu(), new SailingToolsMenuDelagate_TargetContext(), Ui.SLIDE_LEFT);
         
         
+		Sys.println("SailingToolsTimerView.doSelect");
 		var raceTimer = App.getApp().raceTimer;
 		
 		//  Start the timer if it's not started
 		// Otherwise round to nearest minute
     	if (raceTimer != null ) {
+    		Sys.println("isStarted()" + raceTimer.isStarted());
+    		Sys.println("isRacing()" + raceTimer.isStarted());
+    		
     		if (raceTimer.isStarted()) {
-	    		raceTimer.roundMinutes();
+    			if (raceTimer.isRacing()) {
+    				raceTimer.stopRace();
+    			} else {
+	    			raceTimer.roundMinutes();
+	    		}
 	    	} else {
 	    		raceTimer.startTimer();
 	    	}

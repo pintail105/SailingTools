@@ -14,6 +14,11 @@ class SailingToolsApp extends App.AppBase {
     var posnInfo = null; // Position.Info object
     var lastPosnUpdate = null; // the time of the last position update
     
+    // for smoothing speed / bearing
+    var useSmoothedPosn = false; // keep off until tested
+    var posnInfo_arr = new [5]; // set up 5 member array
+    var posnInfo_arr_pntr = 0; 
+    
     var canRecord = false; // Whether we can record activity
     var recording = false; // Whether we're recording acitivity
     var session = null; // recording session
@@ -49,7 +54,35 @@ class SailingToolsApp extends App.AppBase {
     function onPosition(info) {
 		posnInfo = info;
         lastPosnUpdate = Time.now();
-        sailingToolsViews[viewIndex].setPosition(info, lastPosnUpdate);
+        
+        if( useSmoothedPosn ) {
+        	var posnInfo_5ago = null;
+        	var heading, elapsed, speed;
+        	posnInfo_arr_pntr++;
+        	if ( posnInfo_arr_pntr > 4) { // arrays are 0-based
+        		posnInfo_arr_pntr = 0;
+        	}
+        	posnInfo_arr[posnInfo_arr_pntr] = info;
+        	
+        	// get position we received 5 calls ago
+        	if (posnInfo_arr_pntr == 4) {
+	        	posnInfo_5ago = posnInfo_arr[0];
+        	} else {
+	        	posnInfo_5ago = posnInfo_arr[posnInfo_arr_pntr + 1];
+        	}
+        	
+        	if (posnInfo_5ago != null) {
+	        	distance = GeoCalcs.getDistance_m(posnInfo_5ago.position, info.position); // in meters
+	        	heading = GeoCalcs.getBearing_rad(posnInfo_5ago.position, info.position); // in radians
+	        	elapsed = info.position.when.subtract(posnInfo_5ago.position.when).value(); // stored in seconds
+	        	speed = distance / elapsed; // meters per second
+	        	
+	        	posnInfo.heading = heading;
+	        	posnInfo.speed = speed;
+        	}
+        }
+        
+        sailingToolsViews[viewIndex].setPosition(posnInfo, lastPosnUpdate);
     }
 
     // Return the initial view of your application here
@@ -79,7 +112,8 @@ class SailingToolsApp extends App.AppBase {
 				recording = true;
 				if( ( session == null ) || ( session.isRecording() == false ) ) {
 					Sys.println("start ActivityRecording");
-					session = Record.createSession({:name=>"Sailing", :sport=>Record.SPORT_GENERIC});
+//					session = Record.createSession({:name=>"Sailing", :sport=>Record.SPORT_GENERIC});
+					session = Record.createSession({:name=>"Sailing", :sport=>Record.SPORT_SAILING});
 					session.start();
 				}
 			}
@@ -118,7 +152,7 @@ class SailingToolsApp extends App.AppBase {
 	// Add current position as target, then switch to that target
 	function doubleSelect() {
 		addCurPosAsTarget("New Waypoint");
-    		viewIndex = sailingToolsViews.size() - 1;
+    	viewIndex = sailingToolsViews.size() - 1;
         sailingToolsViews[viewIndex].setPosition(posnInfo, lastPosnUpdate);
 		Ui.switchToView(sailingToolsViews[viewIndex], sailingToolsDelegates[viewIndex], Ui.SLIDE_UP);
 	}

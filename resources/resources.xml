@@ -54,11 +54,11 @@
 </menu>
 <properties>
 	<property id="customTimer" type="number">3</property>
-	<property id="slot01" type="string">MKE North Gap;43.044235;-87.880455</property>
-	<property id="slot02" type="string">MKE Main Gap;43.02631;-87.881882</property>
-	<property id="slot03" type="string">MKE South Gap;43.007965;-87.876808</property>
-	<property id="slot04" type="string">MKE MAST Bouy;43.03661;-87.846336</property>
-	<property id="slot05" type="string">MKE Green Bell Bouy;42.989051;-87.830694</property>
+	<property id="slot01" type="string">MKE MAST Bouy;43.03661;-87.846336</property>
+	<property id="slot02" type="string">MKE Green Bell Bouy;42.989051;-87.830694</property>
+	<property id="slot03" type="string">MKE North Gap;43.044235;-87.880455</property>
+	<property id="slot04" type="string">MKE Main Gap;43.02631;-87.881882</property>
+	<property id="slot05" type="string">MKE South Gap;43.007965;-87.876808</property>
 	<property id="slot06" type="string">Grand Haven, MI;43.057708;-86.257882</property>
 	<property id="slot07" type="string"></property>
 	<property id="slot08" type="string"></property>

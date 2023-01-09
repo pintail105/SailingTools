@@ -15,9 +15,25 @@ class RaceTimer {
 	var timerMinutes = 5;
 	var endTime = null;
 	var started = false;
+	var raceOver = false;
+	var raceOverTime = null;
 	
 	function isStarted() {
 		return started;
+	}
+	
+	function isRacing() {
+		// If we've started and race is not over
+		// If seconds to start is negative, then we're racing
+		if (started & !raceOver) {
+			return (getSecsToStart()<0);
+		} 
+		return false;
+	}
+	
+	function stopRace() {
+		raceOver = true;
+		raceOverTime = Time.now();
 	}
 	
 	function stopTimer() {
@@ -26,6 +42,8 @@ class RaceTimer {
 	
 	function startTimer() {
 		started = true;
+		raceOver = false;
+		raceOverTime = null;
 		resetTimer();
 	}
 	
@@ -34,9 +52,8 @@ class RaceTimer {
 	}
 	
 	function resetTimer() {
-		// Get time 5 minutes from now, as Moment object
+		// Get time that is timerMinutes from now, as Moment object
 		endTime = Time.now().add(new Time.Duration( timerMinutes * Gregorian.SECONDS_PER_MINUTE ));
-//		endTime = Time.now().add(new Time.Duration( 300 )); //TESTING
 	}
 	
 	function getEndTime() {
@@ -46,7 +63,11 @@ class RaceTimer {
 	function getSecsToStart() {
 		var secsToStart = timerMinutes * 60;
 		if (started) {
-			secsToStart = endTime.compare(Time.now());
+			if (raceOver) {
+				secsToStart = endTime.compare(raceOverTime);
+			} else {
+				secsToStart = endTime.compare(Time.now());
+			}
 		}
 		return secsToStart;
 	}
