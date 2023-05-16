@@ -4,16 +4,16 @@
 
 	<drawable-list id="TargetLayoutDrawables">
 		<!-- line between RelBrg/Brg and knt/distance -->
-		<shape type="rectangle" x="140" y="57" width="1" height="167" color="Gfx.COLOR_WHITE"/>
+		<shape type="rectangle" x="180" y="73" width="1" height="214" color="Gfx.COLOR_WHITE"/>
 		<!-- line above name -->
-		<shape type="rectangle" x="0" y="222" width="280" height="1" color="Gfx.COLOR_WHITE"/>
+		<shape type="rectangle" x="0" y="285" width="360" height="1" color="Gfx.COLOR_WHITE"/>
 	</drawable-list>
 	
 	<drawable-list id="MainLayoutDrawables">
 		<!-- line between COG and knt -->
-		<shape type="rectangle" x="136" y="52" width="1" height="126" color="Gfx.COLOR_WHITE"/>
+		<shape type="rectangle" x="175" y="67" width="1" height="163" color="Gfx.COLOR_WHITE"/>
 		<!-- line above lat/long -->
-		<shape type="rectangle" x="0" y="181" width="280" height="1" color="Gfx.COLOR_WHITE"/>
+		<shape type="rectangle" x="0" y="233" width="360" height="1" color="Gfx.COLOR_WHITE"/>
 	</drawable-list>
 
 </drawables>

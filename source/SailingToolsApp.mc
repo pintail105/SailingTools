@@ -88,8 +88,8 @@ class SailingToolsApp extends App.AppBase {
     // Return the initial view of your application here
     function getInitialView() {
 		// main view
-    		sailingToolsViews.add( new SailingToolsMainView() );
-    		sailingToolsDelegates.add( new SailingToolsDelegate() );
+    		sailingToolsViews = [ new SailingToolsMainView() ];
+    		sailingToolsDelegates = [ new SailingToolsDelegate() ];
     		
     		// set up one target view
     		//sailingToolsViews.add( new SailingToolsTargetView() );
