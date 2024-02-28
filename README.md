@@ -7,14 +7,14 @@ Target - Shows time, speed, and target (i.e., waypoint) information, including r
 Timer - Race timer  
 
 Multiple targets can be loaded. Screens are rotated by pressing the up/down arrow keys.  
-Double-pressing (within 1 second) the run button sets a new target.  
+Double-pressing (within 1 second) the run button sets a new target using your current position.  
 Single-pressing the run button on the target view opens menu. Choices are to stop following that target or save the target.  
-Holding the up button opens the main menu. Choices are to load a saved target or start the timer.  
+Holding the up button opens the main menu. Choices are to load a saved target or load the timer.  
 Pressing the back button opens the exit menu. Choices are to Save and Exit or Discard and Exit.  
 All menus are designed with Back being the default option. This helps avoid choosing something you don't want to do when bumping the buttons, like during an active race.  
 Targets are saved to slots. Garmin limits the menu items, so only 15 slots are available at this time.  
 Activity recording starts automatically when the unit gets a (marginal) location fix.  
-If the timer is already running, starting it from the main menu will reset it. The time is currently hard coded to 5 minutes.  
+If the timer is already running, reloading it from the main menu will reset it. There is a hard coded 5 minute timer, or a user setting-based timer. So, you can set the timer to be 3 mintues, for example.  
 When viewing the timer, pressing the run button will round the timer to closest minute.  
 If the location stops being updated or becomes poor quality, the display will grey slightly and will include a warning text in red.  
 
@@ -23,6 +23,8 @@ Editing or manually inputting targets (waypoints) is done by editing the Sailing
 The original layout was designed for the Garmin Forerunner 235.  Layouts for other round-faced watches are now included, though there could be minor issues to different font sizes on different devices.  Please feel free to let me know if there are issues with the layout on a particular watch, or for requests to support a specific watch.  
 
 Disclaimer: Do not use this app for primary navigational purposes.  
+
+I wrote this app because I love sailing, and I needed a quick and easy app to use while racing or just cruising around the lake. I don't accept any payment. But, if you find this app useful, the best payment I could imagine is an invitation to come sailing with you. 
 
 Main View:  
 ![Main View](https://github.com/pintail105/SailingTools/raw/master/img/mainView.png?raw=true "Main View")
