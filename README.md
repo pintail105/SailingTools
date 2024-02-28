@@ -9,13 +9,13 @@ Timer - Race timer
 Multiple targets can be loaded. Screens are rotated by pressing the up/down arrow keys.  
 Double-pressing (within 1 second) the run button sets a new target using your current position.  
 Single-pressing the run button on the target view opens menu. Choices are to stop following that target or save the target.  
-Holding the up button opens the main menu. Choices are to load a saved target or load the timer.  
+Holding the up button opens the main menu. Choices are to load a saved target, load the default 5 minute timer, or load the custom timer.  
 Pressing the back button opens the exit menu. Choices are to Save and Exit or Discard and Exit.  
 All menus are designed with Back being the default option. This helps avoid choosing something you don't want to do when bumping the buttons, like during an active race.  
 Targets are saved to slots. Garmin limits the menu items, so only 15 slots are available at this time.  
 Activity recording starts automatically when the unit gets a (marginal) location fix.  
-If the timer is already running, reloading it from the main menu will reset it. There is a hard coded 5 minute timer, or a user setting-based timer. So, you can set the timer to be 3 mintues, for example.  
-When viewing the timer, pressing the run button will round the timer to closest minute.  
+When viewing the timer, pressing the run button will start the timer. Pressing the run button while the timer is running will round the timer to closest minute.
+If the timer is already running, reloading it from the main menu will reset it. The default timer is hard coded to 5 minutes. You can set a custom timer in the app settings through your phone.
 If the location stops being updated or becomes poor quality, the display will grey slightly and will include a warning text in red.  
 
 Editing or manually inputting targets (waypoints) is done by editing the SailingTools app settings through the Garmin app on your phone. The format is "name;latitude;longitude" (without the quotes). Here is an example: "MKE North Gap;43.044235;-87.880455".  Only 15 slots are actually available due to Garmin's limit on menu items. The last couple slots are specially named for possible future features.
