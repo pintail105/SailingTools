@@ -25,9 +25,6 @@ class SailingToolsMenuWaypointDelegate extends Ui.MenuInputDelegate {
 				menu.addItem(i.format("%2d") + ": " + slotName, i);
 			}
 		}
-		// load special start_pin and cmte_boat slots
-		menu.addItem( "Start Pin", :start_pin); //@Strings.title_start_pin
-		menu.addItem( "Committee Boat", :cmte_boat); //@Strings.title_cmte_boat
 		
 		return menu;
 	}
@@ -122,10 +119,6 @@ class SailingToolsMenuDelegate_FollowTarget extends Ui.MenuInputDelegate {
 			App.getApp().returnFromMenu();
         } else if (item >= 1 && item <= 19) {
 			slotId = "slot" + item.format("%02d");
-        } else if (item == :start_pin) {
-			slotId = "start_pin";
-        } else if ( item == :cmte_boat) {
-			slotId = "cmte_boat";
         } else {
 			Sys.println("no action on item: " + item);
         }
@@ -148,6 +141,7 @@ class SailingToolsMenuDelagate_TargetContext extends SailingToolsMenuWaypointDel
 		switch (item) {
 			case :unfollow:
 		        Sys.println("unfollow");
+				Ui.popView(Ui.SLIDE_RIGHT); // pop out of menu
 				App.getApp().unfollowTarget();
 				break;
 			case :save:
@@ -155,6 +149,14 @@ class SailingToolsMenuDelagate_TargetContext extends SailingToolsMenuWaypointDel
 				Ui.pushView(createWaypointMenu(), new SailingToolsMenuDelegate_SaveTarget(), Ui.SLIDE_LEFT);	
 				break;
 				break;
+			case :toggleETEorBRG:
+		        Sys.println("toggleETEorBRG");
+		        App.getApp().toggleETEorBRG();
+		        break;
+			case :toggleSpeedOrVMG:
+		        Sys.println("toggleSpeedOrVMG");
+		        App.getApp().toggleSpeedOrVMG();
+		        break;
 			case :back:
 				// Do nothing -> return	
 				App.getApp().returnFromMenu();
@@ -179,10 +181,6 @@ class SailingToolsMenuDelegate_SaveTarget extends Ui.MenuInputDelegate {
 			App.getApp().returnFromMenu();
         } else if (item > 1 && item <= 19) {
 			slotId = "slot" + item.format("%02d");
-        } else if (item == :start_pin) {
-			slotId = "start_pin";
-        } else if ( item == :cmte_boat) {
-			slotId = "cmte_boat";
         } else {
 			Sys.println("no action on item: " + item);
         }

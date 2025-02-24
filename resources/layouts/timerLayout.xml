@@ -1,5 +1,8 @@
 <layout id="TimerLayout">
-  <label id="timerHead" text="Time To Start" x="center" y="50" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_RED" />
+  <label id="overlayMessage" text="" x="center" y="center" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
+  
   <label id="clockTime" text="" x="center" y="10" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
-  <label id="timerTime" text="5:00" x="center" y="70" justification="Graphics.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_NUMBER_THAI_HOT" color="Gfx.COLOR_WHITE" />
+  <label id="timerHead" text="Time To Start" x="center" y="34" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_RED" />
+  <label id="timerTime" text="5:00" x="center" y="49" justification="Graphics.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_NUMBER_THAI_HOT" color="Gfx.COLOR_WHITE" />
+  <label id="timer2Time" text="" x="center" y="137" justification="Graphics.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_NUMBER_MEDIUM" color="Gfx.COLOR_WHITE" />
 </layout>

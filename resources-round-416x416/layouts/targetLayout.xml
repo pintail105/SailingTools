@@ -1,17 +1,18 @@
 <layout id="TargetLayout">
   <drawable id="TargetLayoutDrawables"/>
+  <label id="overlayMessage" text="" x="center" y="center" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
   
-  <label id="lblTargetRelBRG" text="RelBrg" x="194" y="152" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
-  <label id="lblTargetBRG" text="Brg" x="194" y="276" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
-  <label id="lblTargetKNT" text="Knt" x="219" y="152" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
-  <label id="lblTargetNM" text="nm" x="219" y="276" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="lblTargetRelBRG" text="RelBrg" x="194" y="154" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblTargetBRGorETE" text="Brg" x="194" y="278" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblTargetSpeedOrVMG" text="Knt" x="219" y="154" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="lblTargetDistance" text="nm" x="219" y="278" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
 
   <label id="targetTime" text="" x="center" y="19" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
   <label id="targetName" text="" x="center" y="326" justification="Gfx.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_MEDIUM" color="Gfx.COLOR_WHITE" />
   <label id="targetRelBRG" text="" x="200" y="62" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
-  <label id="targetBrg" text="" x="200" y="187" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
-  <label id="targetKnt" text="" x="213" y="62" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
-  <label id="targetNM" text="" x="213" y="187" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
+  <label id="targetBRGorETE" text="" x="200" y="187" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
+  <label id="targetSpeedOrVMG" text="" x="213" y="62" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
+  <label id="targetDistance" text="" x="213" y="187" font="Gfx.FONT_NUMBER_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
 
   <label id="targetBadPos" text="" x="center" y="98" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER"  color="Gfx.COLOR_RED" />
 

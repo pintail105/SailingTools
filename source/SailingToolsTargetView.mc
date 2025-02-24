@@ -18,9 +18,8 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
     var tgt = null; // Position.location object of current target
     var tgtName = ""; // name of target
     var slotId = ""; // name of slot target saved to
-    // TODO: smooth ETE by averaging last 5 observations
-    //var ETEarr = [null,null,null,null,null];
-    //var ETEidx = 1;
+    var ETEorBRG = 1; // 0 = ETE; 1 = BRG
+    var speedOrVMG = 0; // 0 = SOG; 1 = VMC
 
     function initialize() {
         SailingToolsViewTemplate.initialize();
@@ -33,6 +32,13 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			)
 		);
 		setTargetName( "MKE North Gap");
+		
+		ETEorBRG = App.getApp().getProperty( "preferredTargetETEorBRG" );
+		speedOrVMG = App.getApp().getProperty( "preferredTargetSpeedOrVMG" );
+		
+		Sys.println("ETEorBRG = " + ETEorBRG);
+		Sys.println("speedOrVMG = " + speedOrVMG);
+		
     }
     
     function setTarget( tgt ) {
@@ -44,7 +50,13 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 	}
 	
 	function saveToSlot( slotId	) {
-		var saveString = tgtName + ";" + tgt.toDegrees()[0] + ";" + tgt.toDegrees()[1];
+		var lat_str = Calcs.formatLatLongDegrees(tgt.toDegrees()[0]);
+		var long_str = Calcs.formatLatLongDegrees(tgt.toDegrees()[1]);
+		
+		lat_str = cleanLatLong(lat_str);
+		long_str = cleanLatLong(long_str);
+		
+		var saveString = tgtName + ";" + lat_str + ";" + long_str;
 		Sys.println("saveString: " + saveString);
 		try {
 			App.getApp().setProperty( slotId, saveString );
@@ -54,6 +66,76 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			System.println("Error in saveToSlot: " + ex.getErrorMessage );
 			// TODO: Figure out a way to let user know target wasn't saved
 		}
+	}
+	
+	// Remove degree, minutes, and seconds symbols
+	function cleanLatLong( string ) {
+		//Sys.println("entering clean: " + string);
+		var index = string.find("°");
+		if (index != null) {
+			string = string.substring(0,index) + string.substring(index+1,string.length());
+		}
+		
+		index = string.find("'");
+		if (index != null) {
+			string = string.substring(0,index) + string.substring(index+1,string.length());
+		}
+		index = string.find("\"");
+		if (index != null) {
+			string = string.substring(0,index) + string.substring(index+1,string.length());
+		}
+		
+		//Sys.println("leaving clean: " + string);
+		return string;
+	}
+	
+	// to get float from one of:
+	// d.decimal
+	// d m.decimal
+	// d m s
+	function parseLatLong( string ) {
+		string = cleanLatLong(string);
+		var isNegative = false;
+		var value;
+		var str1 = "0";
+		var str2 = "0";
+		var spaceIndex = string.find( " " );
+		if ( spaceIndex != null ) {
+			str1 = string.substring(0,spaceIndex);
+			string = string.substring(spaceIndex + 1, string.length());
+			
+			spaceIndex = string.find( " " );
+			if ( spaceIndex != null ) {
+				// 2 spaces => d m s
+				str2 = string.substring(0,spaceIndex);
+				string = string.substring(spaceIndex + 1, string.length());
+			} else {
+				// 1 space => d m.decimal
+				str2 = string;
+				string = "0";
+			}
+		} else {
+			// no spaces => interpret as d.decimal
+			str1 = string;
+			string = "0";
+		}
+		
+
+		value = str1.toFloat(); // degrees
+		var minutes = str2.toFloat();
+		var seconds = string.toFloat();
+		if (minutes == null) { minutes = 0; }
+		if (seconds == null) { seconds = 0; }
+		
+		Sys.println("degress: '" + value + "'; minutes: '" + minutes + "'; seconds: '" + seconds + "'");
+		// We have to save off sign of degrees
+		// Add all the portions as absolute numbers
+		// Then negate if sign was negative
+		isNegative = (value < 0);
+		value = value.abs();
+		value = value + minutes/60 + seconds/3600;
+		if (isNegative) { value = -value; }
+		return value;
 	}
 	
 	function loadFromSlot( slotId ) {
@@ -66,8 +148,8 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			
 			delimIndex = saveString.find( ";" );
 			if ( delimIndex != null ) {
-				newLat = saveString.substring(0,delimIndex).toFloat();
-				newLong = saveString.substring(delimIndex + 1, saveString.length()).toFloat();
+				newLat = parseLatLong(saveString.substring(0,delimIndex));
+				newLong = parseLatLong(saveString.substring(delimIndex + 1, saveString.length()));
 				
 				Sys.println("newName:" + newName);
 				Sys.println("newLat:" + newLat);
@@ -87,6 +169,23 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 			}
 		}
 	}
+	
+	
+	function toggleETEorBRG() {
+		if (ETEorBRG == 0) {
+			ETEorBRG = 1;
+		} else {
+			ETEorBRG = 0;
+		}
+	}
+	function toggleSpeedOrVMG() {
+		if (speedOrVMG == 0) {
+			speedOrVMG = 1;
+		} else {
+			speedOrVMG = 0;
+		}
+	}
+	
     
     function onLayout( dc ) {
         setLayout( Rez.Layouts.TargetLayout( dc ) );
@@ -112,88 +211,150 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
     // Update the view
     function onUpdate(dc) {
         var string;
-
-		var foreColor = Gfx.COLOR_WHITE;
         
-    		// Forerunner 235 width: 215, height: 180
-    		//  center: 107, 90
-    		// time at top
+		setTextColor( Gfx.COLOR_WHITE );
+				
+		// Forerunner 235 width: 215, height: 180
+		//  center: 107, 90
+		// time at top
 		var today = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 		string = today.hour.format("%2d") + ":" + today.min.format("%02d") + ":" + today.sec.format("%02d");
 		View.findDrawableById("targetTime").setText( string );
         
-        
         // show target name at bottom
 		View.findDrawableById("targetName").setText( tgtName );
-        
-	        
+            
         // only display position data if it we have it 
         if( posnInfo != null ) {
 			View.findDrawableById("targetBadPos").setText( "" );
 			
-			// if last position update was > 10 seconds old or signal is poor, draw data in dark grey 
-			if (Time.now().subtract( lastPosnUpdate ).value() >= 10 || posnInfo.accuracy < Position.QUALITY_USABLE) {
-				foreColor = Gfx.COLOR_DK_GRAY;
-			}
-			
 			// get distance and bearing to target
-            var distance = GeoCalcs.getDistance(posnInfo.position, tgt);
-            var bearing_deg = GeoCalcs.getBearing_deg(posnInfo.position, tgt);
+            var distance = Calcs.getDistance_m(posnInfo.position, tgt);
+            var bearing_deg = Calcs.getBearing_deg(posnInfo.position, tgt);
             
             // get heading (for drawing bearing arrow relative to current heading)
 			var heading_deg = posnInfo.heading * (180 / Math.PI);
             
 			
-			// ETE = Estimated Time Enroute
-			// Time to target on left upper
-			// get relative speed to target
-			/*
-			var speed_rel = Math.cos( (bearing_deg - heading_deg) * (Math.PI / 180) ) * (posnInfo.speed * 1.94384);
-			var targetETE = View.findDrawableById("targetETE");
-			// If our relative speed is less than 0.1kt we show NA
-			// This handles negative and zero speeds, and those that would produce very high ETE
-			if (speed_rel < 0 || speed_rel == 0) {
-				targetETE.setText("NA");
-			} else {
+			// Relative bearing (= bearing - heading)
+			var relBearing_deg = bearing_deg - heading_deg;
+			// Keep in range of -180 to +180
+			if (relBearing_deg < -180) { relBearing_deg += 360; }
+			if (relBearing_deg > 180) { relBearing_deg -= 360; }
+			
+			if (relBearing_deg < 0) {
+				// If to port, draw in red
+				View.findDrawableById("targetRelBRG").setColor( Gfx.COLOR_RED );
+			} 
+			else {
+				// If to starboard, draw in green
+				View.findDrawableById("targetRelBRG").setColor( Gfx.COLOR_GREEN );
+			}
+			//string = relBearing_deg.format("%+1.0f");
+			string = relBearing_deg.format("%1.0f"); // some watch number fonts don't include '+'
+			View.findDrawableById("targetRelBRG").setText( string );
+			
+			
+			var speed_rel = Math.cos( (bearing_deg - heading_deg) * (Math.PI / 180) ) * (posnInfo.speed);
+			
+			var targetBRGorETE = View.findDrawableById("targetBRGorETE");
+			var lblTargetBRGorETE = View.findDrawableById("lblTargetBRGorETE");
+			if ( ETEorBRG == 0) {
+				// ETE = Estimated Time Enroute
+				// Time to target on left upper
+				// get relative speed to target
+				
+				// If our relative speed is less than 0.05m/s (~0.1kt) we show NA
+				// This handles negative and zero speeds, and those that would produce very high ETE
+				if (speed_rel < 0.05 ) { //|| speed_rel == 0) {
+					targetBRGorETE.setText("");
+						lblTargetBRGorETE.setText( "ETE (n/a)" );
+				} else {
+					var ETE = distance / speed_rel; // meters / meters per seconds = seconds
+					Sys.println( "ETE: " + ETE );
+					// if time is > 1 hour, then show as hours:minutes
+					if ( ETE > 3600 ) { // 60 * 60 = 3600
+						ETE = ETE / 3600; // ETE now in hours
+						string = ETE.toNumber().toString() + ":";
+						string += ((ETE - ETE.toNumber()) * 60).format("%02d");
+						lblTargetBRGorETE.setText( "ETE (h:m)" );
+						targetBRGorETE.setText(string);	
+					} else { // otherwise show as minutes:seconds
+						ETE = ETE / 60; // ETE now in minutes
+						string = ETE.toNumber().toString() + ":";
+						string += ((ETE - ETE.toNumber()) * 60).format("%02d");
+						lblTargetBRGorETE.setText( "ETE (m:s)" );
+						targetBRGorETE.setText( string );
+					}
+				}
+				/*
 				var ETE = distance / speed_rel;
 				//Sys.println( "ETE: " + ETE );
 				// if time is > 1 hour, then show as hours:minutes
 				if ( ETE > 1 ) {
 					string = ETE.toNumber().toString() + ":";
 					string += ((ETE - ETE.toNumber()) * 60).format("%02d");
-					targetETE.setText(string);	
+					dc.drawText( 102, 28, Gfx.FONT_NUMBER_HOT, string, Gfx.TEXT_JUSTIFY_RIGHT );
 				} else { // otherwise show as minutes:seconds
 					// draw seconds in smaller font
 					var string1 = (ETE * 60).toNumber().toString() + ":";
+					var txtDim1 = dc.getTextDimensions( string1, Gfx.FONT_NUMBER_HOT );
 					string = (((ETE * 60) - (ETE * 60).toNumber()) * 60).format("%02d");
+					var txtDim = dc.getTextDimensions( string, Gfx.FONT_NUMBER_MEDIUM );
 					// Need to start minutes the width of the seconds to the left
-					targetETE.setText(string1 + "  ");
+					dc.drawText( 102 - txtDim[0],
+								 28, Gfx.FONT_NUMBER_HOT, string1, Gfx.TEXT_JUSTIFY_RIGHT );
 					// Need to start seconds down the difference between minutes height and seconds height
-					View.findDrawableById("targetETE").setText( string );
-				}
+					dc.drawText( 102,
+								28 + txtDim1[1] - txtDim[1], 
+								Gfx.FONT_NUMBER_MEDIUM, string, Gfx.TEXT_JUSTIFY_RIGHT );
+				*/
+				
+				
+			} else {
+				lblTargetBRGorETE.setText( "BTW" );
+				// Bearing to target on left lower
+				if (bearing_deg < 0) { 
+					bearing_deg += 360; // make sure degrees are positive
+				} 
+				string = bearing_deg.format("%1.0f");
+				targetBRGorETE.setText( string );
 			}
-			*/
-			// Relative bearing (= bearing - heading)
-			var relBearing_deg = bearing_deg - heading_deg;
-			// Keep in range of -180 to +180
-			if (relBearing_deg < -180) { relBearing_deg += 360; }
-			if (relBearing_deg > 180) { relBearing_deg -= 360; }
-			//string = relBearing_deg.format("%+1.0f");
-			string = relBearing_deg.format("%1.0f"); // some watch number fonts don't include '+'
-			View.findDrawableById("targetRelBRG").setText( string );
 			
-			// Bearing to target on left lower
-			if (bearing_deg < 0) { bearing_deg += 360; } // make sure degrees are positive
-			string = bearing_deg.format("%1.0f");
-			View.findDrawableById("targetBrg").setText( string );
+
 			
-			// speed in kt large on right upper
-            string = (posnInfo.speed * 1.94384).format("%1.1f"); // Convert from m/s to knots
-			View.findDrawableById("targetKnt").setText( string );
 			
-        		// distance in nm large on right lower
-            string = distance.format("%1.2f"); 
-			View.findDrawableById("targetNM").setText( string );
+			if (speedOrVMG == 0) { // speed
+				// speed in kt large on right upper
+	            //string = (posnInfo.speed * 1.94384).format("%1.1f"); // Convert from m/s to knots
+				//View.findDrawableById("targetKnt").setText( string );
+				var speed = Calcs.metersPerSecond_to_preferred(posnInfo.speed);
+				View.findDrawableById("targetSpeedOrVMG").setText(speed["value"].format("%1.1f"));
+				View.findDrawableById("lblTargetSpeedOrVMG").setText("SOG (" + speed["label"] + ")");
+            } else { // VMG
+            	var vmg = Calcs.metersPerSecond_to_preferred(speed_rel);
+				View.findDrawableById("targetSpeedOrVMG").setText(vmg["value"].format("%1.1f"));
+				View.findDrawableById("lblTargetSpeedOrVMG").setText("VMC (" + vmg["label"] + ")");
+            }
+			
+    		// distance in nm large on right lower
+            //string = distance.format("%1.2f"); 
+			//View.findDrawableById("targetNM").setText( string );
+			
+	        if ( distance != null ) {
+	        	distance = Calcs.meters_to_preferred(distance);
+	        	if (distance["value"] >= 100) {
+			        string = distance["value"].format("%1.0f");
+	        	} else if (distance["value"] >= 10) {
+			        string = distance["value"].format("%1.1f");
+	        	} else {
+			        string = distance["value"].format("%1.2f");
+	        	}
+	        } else {
+	        	string = "N/A";
+	        }
+			View.findDrawableById("targetDistance").setText( string );
+			View.findDrawableById("lblTargetDistance").setText( "DTW (" + distance["label"] + ")");
             
             
             // Warn if position is stale or not usable
@@ -213,8 +374,8 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
 				View.findDrawableById("targetBadPos").setText( "Position accuracy\nis poor" );	
 				
 				setTextColor( Gfx.COLOR_LT_GRAY);
-			} else {				
-				setTextColor( Gfx.COLOR_WHITE );
+			//} else {	
+			//	setTextColor( Gfx.COLOR_WHITE );			
 			}
 			
             
@@ -241,16 +402,16 @@ class SailingToolsTargetView extends SailingToolsViewTemplate {
     function setTextColor( color ) {
 				
 		View.findDrawableById("lblTargetRelBRG").setColor( color );
-		View.findDrawableById("lblTargetBRG").setColor( color );
-		View.findDrawableById("lblTargetKNT").setColor( color );
-		View.findDrawableById("lblTargetNM").setColor( color );
+		View.findDrawableById("lblTargetBRGorETE").setColor( color );
+		View.findDrawableById("lblTargetSpeedOrVMG").setColor( color );
+		View.findDrawableById("lblTargetDistance").setColor( color );
 		
 		View.findDrawableById("targetTime").setColor( color );
 		View.findDrawableById("targetName").setColor( color );
 		View.findDrawableById("targetRelBRG").setColor( color );
-		View.findDrawableById("targetBrg").setColor( color );
-		View.findDrawableById("targetKnt").setColor( color );
-		View.findDrawableById("targetNM").setColor( color );
+		View.findDrawableById("targetBRGorETE").setColor( color );
+		View.findDrawableById("targetSpeedOrVMG").setColor( color );
+		View.findDrawableById("targetDistance").setColor( color );
     }
 
 }

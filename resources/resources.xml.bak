@@ -9,8 +9,6 @@
 	<string id="menu_save">Save and Exit</string>
 	<string id="menu_discard">Discard and Exit</string>
 	<string id="menu_unfollow">Stop Following</string>
-	<string id="menu_toggleETEorBRG">Toggle ETE/BTW</string>
-	<string id="menu_toggleSpeedOrVMG">Toggle SOG/VMC</string>
 	<string id="menu_saveTarget">Save</string>
 	
 	<string id="pickerChooserTitle">Choose Waypoint</string>
@@ -18,28 +16,18 @@
 	
 	<string id="title_preferences">Preferences</string>
 	<string id="description_preferences">Preferences</string>
-	<string id="title_preferredSpeed">Preferred Speed Units</string>
+	<string id="title_preferredSpeed">Preferred Speed</string>
 	<string id="setting_preferredSpeed_kt">kt</string>
 	<string id="setting_preferredSpeed_mph">mph</string>
 	<string id="setting_preferredSpeed_kph">kph</string>
-	<string id="title_preferredDistance">Preferred Distance Units</string>
+	<string id="title_preferredDistance">Preferred Distance</string>
 	<string id="setting_preferredDistance_nm">nm</string>
 	<string id="setting_preferredDistance_mi">mi</string>
 	<string id="setting_preferredDistance_km">km</string>
-	<string id="title_preferredLatLong">Preferred Lat/Long Format</string>
+	<string id="title_preferredLatLong">Preferred Lat/Long</string>
 	<string id="setting_preferredLatLong_d">d.decimal</string>
 	<string id="setting_preferredLatLong_dm">d m.decimal</string>
-	<string id="setting_preferredLatLong_dms">d m s</string>
-	<string id="title_preferredTargetETEorBRG">Preferred Target ETE or BTW</string>
-	<string id="setting_preferredTargetETE">ETE</string>
-	<string id="setting_preferredTargetBRG">BTW</string>
-	<string id="title_preferredTargetSpeedOrVMG">Preferred Target SOG or VMC</string>
-	<string id="setting_preferredTargetSpeed">SOG</string>
-	<string id="setting_preferredTargetVMG">VMC</string>
-	<string id="title_smoothingNum">Smoothing Num</string>
-	<string id="prompt_smoothingNum">How many positions to use for smoothing speed and heading. Set to 0 to disable smoothing.</string>
-	<string id="title_battLowIndicator">Battery Low Indicator</string>
-	<string id="title_battLowShutdown">Battery Low Shutdown</string>
+	<string id="setting_preferredLatLong_dms">d m' s"</string>
 	<string id="title_customTimer">Custom Timer Minutes</string>
 	
 	<string id="title_targets">Targets</string>
@@ -79,20 +67,12 @@
 	<menu-item id="back" label="@Strings.menu_back"></menu-item>
 	<menu-item id="unfollow" label="@Strings.menu_unfollow"></menu-item>
 	<menu-item id="save" label="@Strings.menu_saveTarget"></menu-item>
-	<menu-item id="toggleETEorBRG" label="@Strings.menu_toggleETEorBRG"></menu-item>
-	<menu-item id="toggleSpeedOrVMG" label="@Strings.menu_toggleSpeedOrVMG"></menu-item>
 </menu>
 <properties>
 	<property id="preferredSpeed" type="number">0</property>
 	<property id="preferredDistance" type="number">0</property>
-	<property id="preferredLatLong" type="number">1</property>
-	<property id="preferredTargetETEorBRG" type="number">1</property>
-	<property id="preferredTargetSpeedOrVMG" type="number">0</property>
-	<property id="smoothingNum" type="number">0</property>
+	<property id="preferredLatLong" type="number">0</property>
 	<property id="customTimer" type="number">3</property>
-	<property id="battLowIndicator" type="number">10</property>
-	<property id="battLowShutdown" type="number">3</property>
-	
 	<property id="slot01" type="string">MKE MAST Buoy;43.03661;-87.846336</property>
 	<property id="slot02" type="string">MKE Green Bell Buoy;42.989051;-87.830694</property>
 	<property id="slot03" type="string">MKE North Gap;43.044235;-87.880455</property>
@@ -114,6 +94,8 @@
 	<property id="slot19" type="string"></property>
 </properties>
 <settings>
+	<group id="preferences" title="@Strings.title_preferences" description="@Strings.description_preferences">
+	
 		<setting propertyKey="@Properties.preferredSpeed" title="@Strings.title_preferredSpeed">
 	        <settingConfig type="list">
 	            <listEntry value="0">@Strings.setting_preferredSpeed_kt</listEntry>
@@ -136,23 +118,9 @@
 	        </settingConfig>	        
         </setting>
         
-		<setting propertyKey="@Properties.preferredTargetETEorBRG" title="@Strings.title_preferredTargetETEorBRG">
-	        <settingConfig type="list">
-	            <listEntry value="0">@Strings.setting_preferredTargetETE</listEntry>
-	            <listEntry value="1">@Strings.setting_preferredTargetBRG</listEntry>
-	        </settingConfig>	        
-        </setting>
-		<setting propertyKey="@Properties.preferredTargetSpeedOrVMG" title="@Strings.title_preferredTargetSpeedOrVMG">
-	        <settingConfig type="list">
-	            <listEntry value="0">@Strings.setting_preferredTargetSpeed</listEntry>
-	            <listEntry value="1">@Strings.setting_preferredTargetVMG</listEntry>
-	        </settingConfig>	        
-        </setting>
-        
-		<setting propertyKey="@Properties.smoothingNum" title="@Strings.title_smoothingNum" prompt="@Strings.prompt_smoothingNum"><settingConfig type="numeric"/></setting>
-		<setting propertyKey="@Properties.battLowIndicator" title="@Strings.title_battLowIndicator"><settingConfig type="numeric"/></setting>
-		<setting propertyKey="@Properties.battLowShutdown" title="@Strings.title_battLowShutdown"><settingConfig type="numeric"/></setting>
 		<setting propertyKey="@Properties.customTimer" title="@Strings.title_customTimer"><settingConfig type="numeric"/></setting>
+    </group>
+    <group id="targets" title="@Strings.title_targets" description="@Strings.description_targets">
 	    <setting propertyKey="@Properties.slot01" title="@Strings.title_slot01"><settingConfig type="alphaNumeric"/></setting>
 	    <setting propertyKey="@Properties.slot02" title="@Strings.title_slot02"><settingConfig type="alphaNumeric"/></setting>
 	    <setting propertyKey="@Properties.slot03" title="@Strings.title_slot03"><settingConfig type="alphaNumeric"/></setting>
@@ -172,6 +140,7 @@
 	    <setting propertyKey="@Properties.slot17" title="@Strings.title_slot17"><settingConfig type="alphaNumeric"/></setting>
 	    <setting propertyKey="@Properties.slot18" title="@Strings.title_slot18"><settingConfig type="alphaNumeric"/></setting>
 	    <setting propertyKey="@Properties.slot19" title="@Strings.title_slot19"><settingConfig type="alphaNumeric"/></setting>
+    </group>
 </settings>
 
 

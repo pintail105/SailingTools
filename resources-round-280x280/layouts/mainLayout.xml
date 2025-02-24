@@ -1,16 +1,17 @@
 <layout id="MainLayout">
   <drawable id="MainLayoutDrawables"/>
+  <label id="overlayMessage" text="" x="center" y="center" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
   
   <label id="lblMainETE" text="COG" x="127" y="144" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
-  <label id="lblMainKnt" text="knt" x="144" y="144" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="lblMainSpeed" text="knt" x="144" y="144" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
 
   <label id="mainTime" text="N/A" x="center" y="12" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
   <label id="mainCOG" text="N/A" x="131" y="64" font="Gfx.FONT_NUMBER_HOT" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
-  <label id="mainKnt" text="N/A" x="140" y="64" font="Gfx.FONT_NUMBER_HOT" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
-  <label id="mainLat" text="N/A" x="206" y="178" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
-  <label id="mainLatNS" text="" x="212" y="178" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
-  <label id="mainLon" text="N/A" x="206" y="204" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
-  <label id="mainLonEW" text="" x="212" y="204" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
+  <label id="mainSpeed" text="N/A" x="140" y="64" font="Gfx.FONT_NUMBER_HOT" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
+  <label id="mainLat" text="N/A" x="203" y="178" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
+  <label id="mainLatNS" text="" x="209" y="178" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
+  <label id="mainLon" text="N/A" x="203" y="204" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_RIGHT"  color="Gfx.COLOR_WHITE" />
+  <label id="mainLonEW" text="" x="209" y="204" font="Gfx.FONT_MEDIUM" justification="Gfx.TEXT_JUSTIFY_LEFT"  color="Gfx.COLOR_WHITE" />
 
   <label id="mainBadPos" text="" x="center" y="60" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER"  color="Gfx.COLOR_RED" />
 

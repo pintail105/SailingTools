@@ -1,0 +1,19 @@
+<layout id="StatsLayout">
+  <label id="overlayMessage" text="" x="center" y="center" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
+  
+  <label id="statsTime" text="N/A" x="center" y="15" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER" color="Gfx.COLOR_WHITE" />
+  
+  <label id="lblStatsElapsedDistance" text="Elpsd Dist.: " x="198" y="83" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblStatsElapsedTime" text="Elpsd Time: " x="198" y="128" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblStatsAverageSpeed" text="Ave. Speed: " x="198" y="173" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblStatsMaxSpeed" text="Max. Speed: " x="198" y="218" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+  <label id="lblStatsBatteryPercent" text="Battery: " x="198" y="263" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_RIGHT" color="Gfx.COLOR_WHITE" />
+	
+  <label id="statsElapsedDistance" text="" x="207" y="83" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="statsElapsedTime" text="" x="207" y="128" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="statsAverageSpeed" text="" x="207" y="173" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="statsMaxSpeed" text="" x="207" y="218" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  <label id="statsBatteryPercent" text="" x="207" y="263" font="Gfx.FONT_SMALL" justification="Gfx.TEXT_JUSTIFY_LEFT" color="Gfx.COLOR_WHITE" />
+  
+  <label id="statsBadPos" text="" x="center" y="77" font="Gfx.FONT_LARGE" justification="Gfx.TEXT_JUSTIFY_CENTER"  color="Gfx.COLOR_RED" />
+</layout>

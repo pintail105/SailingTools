@@ -31,6 +31,10 @@ class RaceTimer {
 		return false;
 	}
 	
+	function isRaceOver() {
+		return raceOver;
+	}
+	
 	function stopRace() {
 		raceOver = true;
 		raceOverTime = Time.now();
@@ -70,6 +74,11 @@ class RaceTimer {
 			}
 		}
 		return secsToStart;
+	}
+	
+	function getSecsSinceFinish() {
+		if (raceOverTime == null) { return 0; }
+		return Time.now().compare(raceOverTime); // gets seconds from when we finished to now
 	}
 	
 	function roundMinutes() {

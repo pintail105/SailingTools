@@ -2,6 +2,7 @@ using Toybox.Application as App;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 using Toybox.ActivityRecording as Record;
+using Toybox.Time.Gregorian;
 
 class SailingToolsApp extends App.AppBase {
 
@@ -10,19 +11,25 @@ class SailingToolsApp extends App.AppBase {
 	var viewIndex = null;
 	var timerIndex = null;
 	var raceTimer = null;
+	
+	var newWaypointNum = 0; // For counting multiple new waypoints
 
     var posnInfo = null; // Position.Info object
     var lastPosnUpdate = null; // the time of the last position update
     
     // for smoothing speed / bearing
-    var useSmoothedPosn = false; // keep off until tested
-    var posnInfo_arr = new [5]; // set up 5 member array
+    var useSmoothedPosn = false; // This will be set by preferences
+    var posnInfo_arr_length = 0; // This will be set by preferences
+    var posnInfo_arr = null; //new [15]; // array will be created in onStart, based on preferences
     var posnInfo_arr_pntr = 0; 
     
     var canRecord = false; // Whether we can record activity
     var recording = false; // Whether we're recording acitivity
     var session = null; // recording session
     var secTimer = null; // Main timer for updating UI, starting recording, etc.
+    
+    var battLowIndicator = 10; // Level at which to show "BATTERY LOW" on screen
+    var battLowShutdown = 3; // Level at which to shutdown and save track
 
     function initialize() {
         AppBase.initialize();
@@ -30,6 +37,21 @@ class SailingToolsApp extends App.AppBase {
 
     // onStart() is called on application start up
     function onStart(state) {
+    	// load smoothing preferences
+		posnInfo_arr_length = App.getApp().getProperty( "smoothingNum" );
+		useSmoothedPosn = posnInfo_arr_length != 0 ? true : false;
+		if (useSmoothedPosn) {
+			posnInfo_arr = new [posnInfo_arr_length];
+			//Sys.println("Using smoothing, with smoothingNum = " + posnInfo_arr_length);
+		} else {
+			//Sys.println("Not using smoothing, with smoothingNum = " + posnInfo_arr_length);
+		}
+		
+		Calcs.preferredDistance = App.getApp().getProperty( "preferredDistance" );
+		Calcs.preferredLatLong = App.getApp().getProperty( "preferredLatLong" );
+    
+    	Calcs.loadPreferences();
+    
         Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
         
 		if( Toybox has :ActivityRecording ) {
@@ -38,6 +60,9 @@ class SailingToolsApp extends App.AppBase {
 		
 		secTimer = new Timer.Timer();
 		secTimer.start(method(:refresh), 1000, true);
+		
+		battLowIndicator = App.getApp().getProperty( "battLowIndicator" );
+		battLowShutdown = App.getApp().getProperty( "battLowShutdown" );
     }
 
     // onStop() is called when your application is exiting
@@ -55,26 +80,50 @@ class SailingToolsApp extends App.AppBase {
 		posnInfo = info;
         lastPosnUpdate = Time.now();
         
+        /*
+		var today = Gregorian.info(lastPosnUpdate, Time.FORMAT_MEDIUM);
+        var now_str = Lang.format(
+			    "$1$:$2$:$3$",
+			    [
+			        today.hour,
+			        today.min,
+			        today.sec
+			    ]
+			);
+			
+		var infoWhen = Gregorian.info(info.when, Time.FORMAT_MEDIUM);
+        var infoWhen_str = Lang.format(
+			    "$1$:$2$:$3$",
+			    [
+			        infoWhen.hour,
+			        infoWhen.min,
+			        infoWhen.sec
+			    ]
+			);
+		
+        Sys.println("position updated at: " + now_str + "; info.when: " + infoWhen_str);
+        
+        */
         if( useSmoothedPosn ) {
-        	var posnInfo_5ago = null;
-        	var heading, elapsed, speed;
+        	var posnInfo_15ago = null;
+        	var distance, heading, elapsed, speed;
         	posnInfo_arr_pntr++;
-        	if ( posnInfo_arr_pntr > 4) { // arrays are 0-based
+        	if ( posnInfo_arr_pntr > (posnInfo_arr_length - 1)) { // arrays are 0-based
         		posnInfo_arr_pntr = 0;
         	}
         	posnInfo_arr[posnInfo_arr_pntr] = info;
         	
-        	// get position we received 5 calls ago
-        	if (posnInfo_arr_pntr == 4) {
-	        	posnInfo_5ago = posnInfo_arr[0];
+        	// get position we received 15 calls ago
+        	if (posnInfo_arr_pntr == (posnInfo_arr_length - 1)) {
+	        	posnInfo_15ago = posnInfo_arr[0];
         	} else {
-	        	posnInfo_5ago = posnInfo_arr[posnInfo_arr_pntr + 1];
+	        	posnInfo_15ago = posnInfo_arr[posnInfo_arr_pntr + 1];
         	}
         	
-        	if (posnInfo_5ago != null) {
-	        	distance = GeoCalcs.getDistance_m(posnInfo_5ago.position, info.position); // in meters
-	        	heading = GeoCalcs.getBearing_rad(posnInfo_5ago.position, info.position); // in radians
-	        	elapsed = info.position.when.subtract(posnInfo_5ago.position.when).value(); // stored in seconds
+        	if (posnInfo_15ago != null) {
+	        	distance = Calcs.getDistance_m(posnInfo_15ago.position, info.position); // in meters
+	        	heading = Calcs.getBearing_rad(posnInfo_15ago.position, info.position); // in radians
+	        	elapsed = info.when.subtract(posnInfo_15ago.when).value(); // stored in seconds
 	        	speed = distance / elapsed; // meters per second
 	        	
 	        	posnInfo.heading = heading;
@@ -87,17 +136,18 @@ class SailingToolsApp extends App.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-		// main view
-    		sailingToolsViews = [ new SailingToolsMainView() ];
-    		sailingToolsDelegates = [ new SailingToolsDelegate() ];
-    		
-    		// set up one target view
-    		//sailingToolsViews.add( new SailingToolsTargetView() );
-    		//sailingToolsDelegates.add( new SailingToolsDelegate() );
-    		
-    		// start with main view
-    		viewIndex = 0;
-        return [ sailingToolsViews[0], sailingToolsDelegates[0] ];
+    	
+		// stats view is at top, then main view
+		sailingToolsViews = [ new SailingToolsStatsView(), new SailingToolsMainView() ];
+		sailingToolsDelegates = [ new SailingToolsDelegate(), new SailingToolsDelegate() ];
+		
+		// set up one target view
+		//sailingToolsViews.add( new SailingToolsTargetView() );
+		//sailingToolsDelegates.add( new SailingToolsDelegate() );
+		
+		// start with main view
+		viewIndex = 1;
+        return [ sailingToolsViews[viewIndex], sailingToolsDelegates[viewIndex] ];
     }
 
 // This is called every second, to update view, etc.
@@ -123,6 +173,18 @@ class SailingToolsApp extends App.AppBase {
 		// We do this in app, since we may not be in the race timer view when beep time is hit
 		if (raceTimer != null) {
 			raceTimer.update();
+		}
+		
+		
+		var sysStats = System.getSystemStats();
+		//System.println(sysStats.battery);
+		if ( sysStats.battery < battLowShutdown ) {
+			saveAndExit();
+			// App.getApp().saveAndExit();
+		} else if ( sysStats.battery < battLowIndicator) {
+			sailingToolsViews[viewIndex].overlayMessage( "BATTERY LOW" );
+		} else {
+			sailingToolsViews[viewIndex].overlayMessage( "" );
 		}
 	}
 	
@@ -151,7 +213,8 @@ class SailingToolsApp extends App.AppBase {
 	
 	// Add current position as target, then switch to that target
 	function doubleSelect() {
-		addCurPosAsTarget("New Waypoint");
+		newWaypointNum++;
+		addCurPosAsTarget("New Waypoint " + newWaypointNum);
     	viewIndex = sailingToolsViews.size() - 1;
         sailingToolsViews[viewIndex].setPosition(posnInfo, lastPosnUpdate);
 		Ui.switchToView(sailingToolsViews[viewIndex], sailingToolsDelegates[viewIndex], Ui.SLIDE_UP);
@@ -216,6 +279,14 @@ class SailingToolsApp extends App.AppBase {
 		Sys.println("Attempting to save to " + slotId);
     		sailingToolsViews[viewIndex].saveToSlot( slotId );
 		
+	}
+	
+	function toggleETEorBRG() {
+		sailingToolsViews[viewIndex].toggleETEorBRG( );
+	}
+	
+	function toggleSpeedOrVMG() {
+		sailingToolsViews[viewIndex].toggleSpeedOrVMG( );
 	}
 	
 	function doPageUp() {

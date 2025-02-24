@@ -47,6 +47,11 @@ class SailingToolsViewTemplate extends Ui.View {
         posnInfo = info;
         lastPosnUpdate = lastUpdate;
     }
+    
+    function overlayMessage( message ) {
+		View.findDrawableById("overlayMessage").setColor( Gfx.COLOR_PINK );
+		View.findDrawableById("overlayMessage").setText( message );
+    }
 	
 }
 
@@ -74,7 +79,7 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
     function onUpdate(dc) {
         var string;
         
-		var foreColor = Gfx.COLOR_WHITE;
+		//var foreColor = Gfx.COLOR_WHITE;
         
     		// Forerunner 235 width: 215, height: 180
     		//  center: 107, 90
@@ -86,25 +91,30 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
         // only display position data if it we have it 
         if( posnInfo != null ) {
 			View.findDrawableById("mainBadPos").setText( "" );
-			
+			/*
 			// if last position update was > 10 seconds old or signal is poor, draw data in dark grey 
 			if (Time.now().subtract( lastPosnUpdate ).value() >= 10 || posnInfo.accuracy < Position.QUALITY_USABLE) {
 				foreColor = Gfx.COLOR_DK_GRAY;
 			}
+			*/
         
 			// Heading (Course Over Ground) on left
 			var heading_deg = posnInfo.heading * (180 / Math.PI);
 			if (heading_deg < 0) { heading_deg += 360; } // make sure degrees are positive
 			string = heading_deg.format("%1.0f");
+			//string = Calcs.formatDegrees(heading_deg);
 			View.findDrawableById("mainCOG").setText(string);
         
-        		// speed in knots big on right
-            string = (posnInfo.speed * 1.94384).format("%1.1f"); // Convert from m/s to knots
-			View.findDrawableById("mainKnt").setText(string);
+    		// speed in knots big on right
+			//string = (posnInfo.speed * 1.94384).format("%1.1f"); // Convert from m/s to knots
+			var speed = Calcs.metersPerSecond_to_preferred(posnInfo.speed);
+			View.findDrawableById("mainSpeed").setText(speed["value"].format("%1.1f"));
+			View.findDrawableById("lblMainSpeed").setText("SOG (" + speed["label"] + ")");
             
             // show lat/long at bottom
             // lat
-            string = posnInfo.position.toDegrees()[0].format("%1.6f");
+            //string = posnInfo.position.toDegrees()[0].format("%1.6f");
+            string = Calcs.formatLatLongDegrees(posnInfo.position.toDegrees()[0]);
 			View.findDrawableById("mainLat").setText(string);
             if (posnInfo.position.toDegrees()[0] > 0) {
                 string = "N";
@@ -113,7 +123,8 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
             }
 			View.findDrawableById("mainLatNS").setText(string);
          	// long
-            string = posnInfo.position.toDegrees()[1].format("%1.6f");
+            //string = posnInfo.position.toDegrees()[1].format("%1.6f");
+            string = Calcs.formatLatLongDegrees(posnInfo.position.toDegrees()[1]);
 			View.findDrawableById("mainLon").setText(string);
             if (posnInfo.position.toDegrees()[1] > 0) {
                 string = "E";
@@ -174,11 +185,11 @@ class SailingToolsMainView extends SailingToolsViewTemplate {
     function setTextColor( color ) {
 				 
 		View.findDrawableById("lblMainETE").setColor( color );
-		View.findDrawableById("lblMainKnt").setColor( color );
+		View.findDrawableById("lblMainSpeed").setColor( color );
 
 		View.findDrawableById("mainTime").setColor( color );
 		View.findDrawableById("mainCOG").setColor( color );
-		View.findDrawableById("mainKnt").setColor( color );
+		View.findDrawableById("mainSpeed").setColor( color );
 		View.findDrawableById("mainLat").setColor( color );
 		View.findDrawableById("mainLatNS").setColor( color );
 		View.findDrawableById("mainLon").setColor( color );

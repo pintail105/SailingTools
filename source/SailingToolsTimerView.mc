@@ -40,10 +40,11 @@ class SailingToolsTimerView extends SailingToolsViewTemplate {
 		// Otherwise round to nearest minute
     	if (raceTimer != null ) {
     		Sys.println("isStarted()" + raceTimer.isStarted());
-    		Sys.println("isRacing()" + raceTimer.isStarted());
+    		Sys.println("isRacing()" + raceTimer.isRacing());
     		
     		if (raceTimer.isStarted()) {
-    			if (raceTimer.isRacing()) {
+    			if (raceTimer.isRacing() || raceTimer.isRaceOver()) { 
+    				// If race is over and we hit the button, it will set the current time as the race end time
     				raceTimer.stopRace();
     			} else {
 	    			raceTimer.roundMinutes();
@@ -56,12 +57,6 @@ class SailingToolsTimerView extends SailingToolsViewTemplate {
         return true;
 	}
 	
-/*	function resetTimer() {
-		// Get time 5 minutes from now, as Moment object
-		endTime = Time.now().add(new Time.Duration( 5 * Gregorian.SECONDS_PER_MINUTE ));
-//		endTime = Time.now().add(new Time.Duration( 15 )); //TESTING
-	}
-*/
 
     // Called when this View is brought to the foreground. Restore
     // the state of this View and prepare it to be shown. This includes
@@ -110,8 +105,19 @@ class SailingToolsTimerView extends SailingToolsViewTemplate {
 			timerDrawable.setColor(Gfx.COLOR_RED);
 		} else if ( secToStart < 0 ) { // started, show elapsed time
 			headDrawable.setColor(Gfx.COLOR_GREEN);
-			headDrawable.setText("Racing Time");
-			timerDrawable.setColor(Gfx.COLOR_WHITE);
+			if (raceTimer.isRacing()) {
+				headDrawable.setText("Racing Time");
+				timerDrawable.setColor(Gfx.COLOR_WHITE);
+			} else { // Race is over
+				headDrawable.setColor(Gfx.COLOR_DK_GREEN);
+				headDrawable.setText("Finished Time");
+				timerDrawable.setColor(Gfx.COLOR_WHITE);
+				var secsSinceFinish = raceTimer.getSecsSinceFinish() ;
+				secsSinceFinish = (secsSinceFinish / 60).format("%1d") + ":" + (secsSinceFinish % 60).format("%02d");
+				View.findDrawableById("timer2Time").setColor(Gfx.COLOR_DK_BLUE);
+				View.findDrawableById("timer2Time").setText( secsSinceFinish );
+				
+			}
 			//timerDrawable.setFont(Gfx.FONT_NUMBER_HOT);
 		}
 		
