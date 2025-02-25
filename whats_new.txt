@@ -1,0 +1,32 @@
+v 1.3.0:
+Loads of updates in this release... (Please let me know if you have any issues / bugs, so I can fix them.)
+New stats page, with elapsed distance, elapsed time, average speed, max speed, and battery percentage.
+Target view can now optionally display Estimated Time Enroute instead of Bearing to Waypoint and Velocity Made Course instead of Speed Over Ground. Also, relative bearing now shows red when to port and green when to starboard.
+Heading and speed can now optionally be smoothed based on a configurable setting. This can help heading, bearing, ETE, VMC, SOG, and VMC be more stable.
+Speed units and distance units are now configurable (knots/mph/kph and nm/mi/km), as well as latitude / longitude display format (d.decimals/d m.decimals/d m s).
+Timer now includes secondary timer that starts when you stop the race timer. This is so you can time when your competitors finish after you.
+Battery low indictor displays on all screens based on a configurable threshold.
+App autosaves and exits when batter level falls below a different configurable threshold.
+Added support for new watches.
+v 1.2.6:
+Added support for new watches.
+v 1.2.5:
+Added support for new watches.
+v 1.2.4:
+Added support for additional watches, including 280, 360, 416, and 454 round watch faces. 
+v 1.2.3:
+Added support for additional watches.
+v 1.2.2:
+Added support for additional watches, including 260x260 round face watches, such as the Fenix 6 Pro. 
+Changed timer menu to just load the timer, not start it. Pressing the run button now starts it. If it's already started, pressing the run button rounds the timer to the nearest minute.
+Fixed an issue with data displayed in the main view and the target views (not including the arrow) being lagged by one screen update.
+v 1.2.1:
+Added support for additional watches, including 280x280 round face watches, such as the Fenix 6x Pro.
+v 1.2:
+Added support for additional watches, including 390x390 round face watches, such as the Venu. Other minor updates.
+v 1.1:
+Added ability to customize timer length in addition to the hard coded 5 minute timer.
+v 0.9:
+Added support for most 218x218 and 240x240 round face watches.
+Added ability to round timer to nearest minute.
+Increased target distance display precision to 2 decimals.
